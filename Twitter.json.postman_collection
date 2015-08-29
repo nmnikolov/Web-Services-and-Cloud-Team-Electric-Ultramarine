@@ -1,0 +1,104 @@
+{
+	"id": "69797166-bad8-7802-5043-efce7498eb49",
+	"name": "Twitter",
+	"description": "",
+	"order": [
+		"48c42123-e30f-b38f-7fe9-dd8469e82ea1",
+		"14ae8898-4700-a794-8d20-91da6e7f5cb2"
+	],
+	"folders": [],
+	"timestamp": 1440711620838,
+	"owner": 0,
+	"remoteLink": "",
+	"public": false,
+	"requests": [
+		{
+			"id": "14ae8898-4700-a794-8d20-91da6e7f5cb2",
+			"headers": "",
+			"url": "http://localhost:60000/api/account/login",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "POST",
+			"data": [
+				{
+					"key": "Username",
+					"value": "nikola",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "Password",
+					"value": "nikola",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "Grant_type",
+					"value": "password",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "urlencoded",
+			"version": 2,
+			"tests": "",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1440840147936,
+			"name": "Login",
+			"description": "",
+			"collectionId": "69797166-bad8-7802-5043-efce7498eb49",
+			"responses": []
+		},
+		{
+			"id": "48c42123-e30f-b38f-7fe9-dd8469e82ea1",
+			"headers": "",
+			"url": "http://localhost:60000/api/account/register",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "POST",
+			"data": [
+				{
+					"key": "Username",
+					"value": "nikola",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "Password",
+					"value": "nikola",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "ConfirmPassword",
+					"value": "nikola",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "Email",
+					"value": "nikola@email.bg",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "Fullname",
+					"value": "Nikola",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "urlencoded",
+			"version": 2,
+			"tests": "",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1440840136091,
+			"name": "Register",
+			"description": "",
+			"collectionId": "69797166-bad8-7802-5043-efce7498eb49",
+			"responses": []
+		}
+	]
+}
