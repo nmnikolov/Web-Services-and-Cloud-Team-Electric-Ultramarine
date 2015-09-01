@@ -35,6 +35,16 @@ namespace Twitter.Data
                     m.MapRightKey("FollowerId");
                     m.ToTable("UsersFollowers");
                 });
+
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(u => u.FollowedFriends)
+                .WithMany()
+                .Map(m =>
+                {
+                    m.MapLeftKey("ApplicationUserId");
+                    m.MapRightKey("FollowedFriendId");
+                    m.ToTable("UsersFollowedFriends");
+                });
             
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany(u => u.RetweetedPosts)

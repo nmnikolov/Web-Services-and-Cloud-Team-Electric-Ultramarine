@@ -11,12 +11,14 @@ namespace Twitter.Models
         private ICollection<Post> ownPosts;
         private ICollection<Post> retweetedPosts;
         private ICollection<ApplicationUser> followers;
+        private ICollection<ApplicationUser> followedFriends;
 
         public ApplicationUser()
         {
             this.ownPosts = new HashSet<Post>();
             this.retweetedPosts = new HashSet<Post>();
             this.followers = new HashSet<ApplicationUser>();
+            this.followedFriends = new HashSet<ApplicationUser>();
         }
 
         public string Location { get; set; }
@@ -38,6 +40,11 @@ namespace Twitter.Models
         {
             get { return this.followers; }
             set { this.followers = value; }
+        }
+        public virtual ICollection<ApplicationUser> FollowedFriends
+        {
+            get { return this.followedFriends; }
+            set { this.followedFriends = value; }
         }
        public async Task<ClaimsIdentity> GenerateUserIdentityAsync(
             UserManager<ApplicationUser> manager,

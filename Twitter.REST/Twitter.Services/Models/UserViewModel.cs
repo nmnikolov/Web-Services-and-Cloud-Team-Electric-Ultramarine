@@ -9,8 +9,12 @@ namespace Twitter.Services.Models
     {
         public string Username { get; set; }
 
+        public string Location { get; set; }
+
         public int TweetsCount { get; set; }
 
         public int FollowersCount { get; set; }
+
+        public int FollowingCount { get; set; }
     }
 }

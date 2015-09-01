@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Web;
+using Microsoft.Ajax.Utilities;
 using Twitter.Models;
 
 namespace Twitter.Services.Models
@@ -20,6 +21,8 @@ namespace Twitter.Services.Models
         public DateTime PostedOn { get; set; }
 
         public int RepliesCount { get; set; }
+
+        public int RetweetsCount { get; set; }
 
         public int FavoritesCount { get; set; }
 
@@ -40,11 +43,14 @@ namespace Twitter.Services.Models
                     WallOwner = new UserViewModel()
                     {
                         Username = p.WallOwner.UserName,
-                        FollowersCount = p.WallOwner.Followers.Count
+                        Location = p.WallOwner.Location,
+                        TweetsCount = p.WallOwner.OwnPosts.Count + p.WallOwner.RetweetedPosts.Count,
+                        FollowersCount = p.WallOwner.Followers.Count,
+                        FollowingCount = p.WallOwner.FollowedFriends.Count
                     },
                     PostedOn = p.PostedOn,
-                    FavoritesCount = p.Favorites.Count(),
                     RepliesCount = p.Replies.Count(),
+                    FavoritesCount = p.Favorites.Count(),
                     Replies = p.Replies
                         .OrderBy(c => c.PostedOn)
                         .Take(3)
