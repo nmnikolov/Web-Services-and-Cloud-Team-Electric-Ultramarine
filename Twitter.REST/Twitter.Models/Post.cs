@@ -1,19 +1,48 @@
-﻿namespace Twitter.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Twitter.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     public class Post
     {
+        private ICollection<Reply> replies;
+        private ICollection<PostFavorite> favorites;
+
+        public Post()
+        {
+            this.replies = new HashSet<Reply>();
+            this.favorites = new HashSet<PostFavorite>();
+        }
+
         public int Id { get; set; }
-        
+
+        [Required]
+        [MinLength(5)]
         public string Content { get; set; }
 
-        public int OwnerId { get; set; }    
+        public DateTime PostedOn { get; set; }
 
-        public ApplicationUser Owner { get; set; }
+        public int AuthorId { get; set; }
+
+        public ApplicationUser Author { get; set; }
+
+        [Required]
+        public string WallOwnerId { get; set; }
+
+        public virtual ApplicationUser WallOwner { get; set; }
+
+        public virtual ICollection<Reply> Replies
+        {
+            get { return this.replies; }
+            set { this.replies = value; }
+        }
+        public virtual ICollection<PostFavorite> Favorites
+        {
+            get { return this.favorites; }
+            set { this.favorites = value; }
+        }
+
     }
 }
