@@ -33,9 +33,9 @@ namespace Twitter.Data
                 {
                     m.MapLeftKey("ApplicationUserId");
                     m.MapRightKey("FollowerId");
-                    m.ToTable("UsersFriends");
+                    m.ToTable("UsersFollowers");
                 });
-
+            
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany(u => u.RetweetedPosts)
                 .WithRequired(p => p.WallOwner)

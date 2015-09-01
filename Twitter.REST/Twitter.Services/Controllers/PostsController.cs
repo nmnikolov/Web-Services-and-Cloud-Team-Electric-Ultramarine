@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
 using SocialNetwork.Services.Controllers;
@@ -10,6 +9,7 @@ using Twitter.Services.Models;
 namespace Twitter.Services.Controllers
 {
       [Authorize]
+      [RoutePrefix("api/posts")]
         public class PostsController : BaseApiController
         {
             // GET api/posts
@@ -25,8 +25,8 @@ namespace Twitter.Services.Controllers
 
             // POST api/posts/{id}
             [HttpPost]
-            public IHttpActionResult AddPost(
-                [FromBody]AddPostBindingModel model)
+            [Route("{id}")]
+            public IHttpActionResult AddPost([FromBody]AddPostBindingModel model)
             {
                 if (model == null)
                 {
@@ -72,9 +72,8 @@ namespace Twitter.Services.Controllers
 
             // PUT api/posts/{id}
             [HttpPut]
-            public IHttpActionResult EditPost(
-                int id,
-                [FromBody]EditPostBindingModel model)
+            [Route("{id}")]
+            public IHttpActionResult EditPost(int id,[FromBody]EditPostBindingModel model)
             {
                 var post = this.Data.Posts.Find(id);
                 if (post == null)
@@ -111,6 +110,7 @@ namespace Twitter.Services.Controllers
 
             // DELETE api/posts/{id}
             [HttpDelete]
+            [Route("{id}")]
             public IHttpActionResult DeletePost(int id)
             {
                 var post = this.Data.Posts.Find(id);

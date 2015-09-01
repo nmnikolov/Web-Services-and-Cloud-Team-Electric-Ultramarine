@@ -39,7 +39,7 @@ namespace Twitter.Models
             get { return this.followers; }
             set { this.followers = value; }
         }
-        public async Task<ClaimsIdentity> GenerateUserIdentityAsync(
+       public async Task<ClaimsIdentity> GenerateUserIdentityAsync(
             UserManager<ApplicationUser> manager,
             string authenticationType)
         {
