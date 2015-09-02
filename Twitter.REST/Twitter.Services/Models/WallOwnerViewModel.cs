@@ -1,4 +1,6 @@
-﻿namespace Twitter.Services.Models
+﻿using WebGrease.Css.Extensions;
+
+namespace Twitter.Services.Models
 {
     using System;
     using System.Collections.Generic;
@@ -19,6 +21,8 @@
 
         public int FollowingCount { get; set; }
 
+        public int FavoritesCount { get; set; }
+
         public IEnumerable<PostViewModel> WallPosts { get; set; }
 
         public static Expression<Func<ApplicationUser, WallOwnerViewModel>> Create
@@ -32,6 +36,7 @@
                     TweetsCount = u.WallPosts.Count,
                     FollowersCount = u.Followers.Count,
                     FollowingCount = u.FollowedFriends.Count,
+                    FavoritesCount = (u.WallPosts.Sum(wp => wp.Favorites.Count)),
                     WallPosts = u.WallPosts.Select(p => new PostViewModel()
                     {
                         Id = p.Id,
