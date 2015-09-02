@@ -7,7 +7,6 @@ using Twitter.Services.Models;
 namespace Twitter.Services.Controllers
 {
     [Authorize]
-    [RoutePrefix("api/posts")]
     public class RepliesController : BaseApiController
     {
         // POST api/posts/{postId}/replies

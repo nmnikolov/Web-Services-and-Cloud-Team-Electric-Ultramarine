@@ -147,8 +147,14 @@ namespace Twitter.Services.Controllers
                     return this.BadRequest("Please login to retweet this post");
                 }
                 var loggedUser = this.Data.Users.Find(loggedUserId);
-
-                loggedUser.WallPosts.Add(post);
+                var retweetedPost = new Post()
+                {
+                    AuthorId = post.AuthorId,
+                    WallOwner = loggedUser,
+                    Content = post.Content,
+                    PostedOn = DateTime.Now,
+                };
+                this.Data.Posts.Add(retweetedPost);
                 this.Data.SaveChanges();
 
                 var loggedUserWall = this.Data.Posts
