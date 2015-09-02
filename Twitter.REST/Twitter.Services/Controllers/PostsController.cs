@@ -131,26 +131,22 @@ namespace Twitter.Services.Controllers
             // POST api/posts/{id}/retweet
             [HttpPost]
             [Route("{id}/retweet")]
-            public IHttpActionResult RetweetPost(int id, [FromBody]AddPostBindingModel model)
+            public IHttpActionResult RetweetPost(int id)
             {
-                if (!this.ModelState.IsValid)
-                {
-                    return this.BadRequest(this.ModelState);
-                }
-
-                var wallOwner = this.Data.Users
-                    .FirstOrDefault(u => u.UserName == model.WallOwnerUsername);
-
-                if (wallOwner == null)
-                {
-                    return this.BadRequest(string.Format(
-                        "User {0} does not exist",
-                        model.WallOwnerUsername));
-                }
-
-                string loggedUserId = this.User.Identity.GetUserId();
-                var loggedUser = this.Data.Users.Find(loggedUserId);
                 var post = this.Data.Posts.Find(id);
+                if (post==null)
+                {
+                    return this.BadRequest("Post does not exist");
+                }
+
+                var wallOwner = this.Data.Users.FirstOrDefault(u => u.Id == post.WallOwnerId);
+                
+                string loggedUserId = this.User.Identity.GetUserId();
+                if (loggedUserId==null)
+                {
+                    return this.BadRequest("Please login to retweet this post");
+                }
+                var loggedUser = this.Data.Users.Find(loggedUserId);
 
                 loggedUser.WallPosts.Add(post);
                 this.Data.SaveChanges();
