@@ -48,8 +48,7 @@ namespace Twitter.Services.Controllers
                         model.WallOwnerUsername));
                 }
 
-                string loggedUserId = this.User.Identity
-                    .GetUserId();
+                string loggedUserId = this.User.Identity.GetUserId();
 
                 var post = new Post()
                 {
