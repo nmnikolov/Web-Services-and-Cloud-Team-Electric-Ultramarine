@@ -20,9 +20,7 @@ namespace Twitter.Services.Models
 
         public int FollowingCount { get; set; }
 
-        public IEnumerable<PostViewModel> OwnPosts { get; set; }
-
-        public IEnumerable<PostViewModel> RetweetedPosts { get; set; }
+        public IEnumerable<PostViewModel> WallPosts { get; set; }
 
         public static Expression<Func<ApplicationUser, WallOwnerViewModel>> Create
         {
@@ -32,34 +30,10 @@ namespace Twitter.Services.Models
                 {
                     Username = u.UserName,
                     Location = u.Location,
-                    TweetsCount = u.OwnPosts.Count + u.RetweetedPosts.Count,
+                    TweetsCount = u.WallPosts.Count,
                     FollowersCount = u.Followers.Count,
                     FollowingCount = u.FollowedFriends.Count,
-                    OwnPosts = u.OwnPosts.Select(p => new PostViewModel()
-                    {
-                        Id = p.Id,
-                        Content = p.Content,
-                        Author = new UserViewModel()
-                        {
-                            Username = p.Author.UserName
-                        },
-                        PostedOn = p.PostedOn,
-                        RepliesCount = p.Replies.Count(),
-                        FavoritesCount = p.Favorites.Count(),
-                        Replies = p.Replies
-                            .OrderBy(c => c.PostedOn)
-                            .Take(3)
-                            .Select(c => new ReplyViewModel()
-                            {
-                                Id = c.Id,
-                                Content = c.Content,
-                                Author = new UserViewModel()
-                                {
-                                    Username = c.Author.UserName
-                                }
-                            })
-                    }),
-                    RetweetedPosts = u.RetweetedPosts.Select(p => new PostViewModel()
+                    WallPosts = u.WallPosts.Select(p => new PostViewModel()
                     {
                         Id = p.Id,
                         Content = p.Content,

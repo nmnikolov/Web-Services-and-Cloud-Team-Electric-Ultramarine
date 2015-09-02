@@ -9,14 +9,14 @@ namespace Twitter.Models
     public class ApplicationUser : IdentityUser
     {
         private ICollection<Post> ownPosts;
-        private ICollection<Post> retweetedPosts;
+        private ICollection<Post> wallPosts;
         private ICollection<ApplicationUser> followers;
         private ICollection<ApplicationUser> followedFriends;
 
         public ApplicationUser()
         {
             this.ownPosts = new HashSet<Post>();
-            this.retweetedPosts = new HashSet<Post>();
+            this.wallPosts = new HashSet<Post>();
             this.followers = new HashSet<ApplicationUser>();
             this.followedFriends = new HashSet<ApplicationUser>();
         }
@@ -31,10 +31,10 @@ namespace Twitter.Models
             set { this.ownPosts = value; }
         }
 
-        public virtual ICollection<Post> RetweetedPosts
+        public virtual ICollection<Post> WallPosts
         {
-            get { return this.retweetedPosts; }
-            set { this.retweetedPosts = value; }
+            get { return this.wallPosts; }
+            set { this.wallPosts = value; }
         }
         public virtual ICollection<ApplicationUser> Followers
         {

@@ -39,18 +39,14 @@ namespace Twitter.Services.Controllers
                 }
 
                 var wallOwner = this.Data.Users.FirstOrDefault(u => u.UserName == username);
+
                 string loggedUserId = this.User.Identity.GetUserId();
-                var loggedUser = this.Data.Users.Find(loggedUserId);
+                
                 if (wallOwner == null)
                 {
                     return this.BadRequest(string.Format(
                         "User {0} does not exist",
                         model.WallOwnerUsername));
-                }
-
-                if (wallOwner != loggedUser)
-                {
-                    return this.Unauthorized();
                 }
                 var post = new Post()
                 {
@@ -157,7 +153,7 @@ namespace Twitter.Services.Controllers
                 var loggedUser = this.Data.Users.Find(loggedUserId);
                 var post = this.Data.Posts.Find(id);
 
-                loggedUser.RetweetedPosts.Add(post);
+                loggedUser.WallPosts.Add(post);
                 this.Data.SaveChanges();
 
                 var loggedUserWall = this.Data.Posts

@@ -23,33 +23,24 @@ namespace Twitter.Services.Controllers
             }
 
             var userWall = this.Data.Users
-                .Where(u => u.Id == user.Id)
+                .Where(u => u.UserName == username)
                 .Select(WallOwnerViewModel.Create);
 
             return this.Ok(userWall);
         }
         [Authorize]
         [HttpPost]
-        public IHttpActionResult FollowUser(string username, [FromBody]AddPostBindingModel model)
+        public IHttpActionResult FollowUser(string username)
         {
             var wallOwner = this.Data.Users.FirstOrDefault(u => u.UserName == username);
             if (wallOwner == null)
             {
                 return this.BadRequest();
             }
-
             var wallOwnerWall = this.Data.Posts
                 .Where(p => p.WallOwnerId == wallOwner.Id)
                 .Select(PostViewModel.Create);
-            if (model == null)
-            {
-                return this.BadRequest("Model cannot be null (no data in request)");
-            }
-
-            if (!this.ModelState.IsValid)
-            {
-                return this.BadRequest(this.ModelState);
-            }
+            
             string loggedUserId = this.User.Identity.GetUserId();
             var loggedUser = this.Data.Users.Find(loggedUserId);
             if (loggedUserId==wallOwner.Id)
@@ -59,7 +50,7 @@ namespace Twitter.Services.Controllers
             if (wallOwner.Followers.Contains(loggedUser))
             {
                 return this.BadRequest(string.Format(
-                    "You already follow {0}",model.WallOwnerUsername));
+                    "You already follow {0}", wallOwner.UserName));
             }
             wallOwner.Followers.Add(loggedUser);
             loggedUser.FollowedFriends.Add(wallOwner);

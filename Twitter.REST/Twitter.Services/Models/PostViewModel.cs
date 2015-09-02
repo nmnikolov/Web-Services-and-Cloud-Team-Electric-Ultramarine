@@ -16,8 +16,6 @@ namespace Twitter.Services.Models
 
         public UserViewModel Author { get; set; }
 
-        public UserViewModel WallOwner { get; set; }
-
         public DateTime PostedOn { get; set; }
 
         public int RepliesCount { get; set; }

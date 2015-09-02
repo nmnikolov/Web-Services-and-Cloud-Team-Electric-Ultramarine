@@ -47,7 +47,7 @@ namespace Twitter.Data
                 });
             
             modelBuilder.Entity<ApplicationUser>()
-                .HasMany(u => u.RetweetedPosts)
+                .HasMany(u => u.WallPosts)
                 .WithRequired(p => p.WallOwner)
                 .WillCascadeOnDelete(false);
 
