@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace Twitter.Services.Models
+﻿namespace Twitter.Services.Models
 {
+    using System;
+
     public class ReplyViewModel
     {
         public int Id { get; set; }

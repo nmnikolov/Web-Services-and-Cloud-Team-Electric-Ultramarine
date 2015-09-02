@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Web;
-using System.Web.UI.WebControls;
-using Twitter.Models;
-
-namespace Twitter.Services.Models
+﻿namespace Twitter.Services.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using Twitter.Models;
+
+
     public class WallOwnerViewModel
     {
         public string Username { get; set; }

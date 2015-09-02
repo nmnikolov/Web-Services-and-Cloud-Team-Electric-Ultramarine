@@ -9,6 +9,7 @@ namespace Twitter.Data.Migrations
     {
         public Configuration()
         {
+            this.AutomaticMigrationDataLossAllowed = true;
             this.AutomaticMigrationsEnabled = true;
             this.ContextKey = "Twitter.Data.TwitterContext";
         }

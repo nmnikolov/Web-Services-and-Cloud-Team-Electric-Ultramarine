@@ -2,3 +2,6 @@ bin/
 obj/
 packages/
 Twitter-front-end/
+Twitter.REST/Twitter.Data/App.config
+Twitter.REST/Twitter.Models/App.config
+Twitter.REST/Twitter.Services/Web.config
