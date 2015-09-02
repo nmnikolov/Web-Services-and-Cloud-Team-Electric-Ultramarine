@@ -23,10 +23,10 @@ namespace Twitter.Services.Controllers
                 return this.Ok(data);
             }
 
-            // POST api/posts/{id}
+            // POST api/posts/{username}
             [HttpPost]
-            [Route("{id}")]
-            public IHttpActionResult AddPost([FromBody]AddPostBindingModel model)
+            [Route("{username}")]
+            public IHttpActionResult AddPost(string username, [FromBody]AddPostBindingModel model)
             {
                 if (model == null)
                 {
@@ -38,9 +38,9 @@ namespace Twitter.Services.Controllers
                     return this.BadRequest(this.ModelState);
                 }
 
-                var wallOwner = this.Data.Users
-                    .FirstOrDefault(u => u.UserName == model.WallOwnerUsername);
-
+                var wallOwner = this.Data.Users.FirstOrDefault(u => u.UserName == username);
+                string loggedUserId = this.User.Identity.GetUserId();
+                var loggedUser = this.Data.Users.Find(loggedUserId);
                 if (wallOwner == null)
                 {
                     return this.BadRequest(string.Format(
@@ -48,8 +48,10 @@ namespace Twitter.Services.Controllers
                         model.WallOwnerUsername));
                 }
 
-                string loggedUserId = this.User.Identity.GetUserId();
-
+                if (wallOwner != loggedUser)
+                {
+                    return this.Unauthorized();
+                }
                 var post = new Post()
                 {
                     AuthorId = loggedUserId,
@@ -130,6 +132,39 @@ namespace Twitter.Services.Controllers
                 this.Data.SaveChanges();
 
                 return this.Ok();
+            }
+            // POST api/posts/{id}/retweet
+            [HttpPost]
+            [Route("{id}/retweet")]
+            public IHttpActionResult RetweetPost(int id, [FromBody]AddPostBindingModel model)
+            {
+                if (!this.ModelState.IsValid)
+                {
+                    return this.BadRequest(this.ModelState);
+                }
+
+                var wallOwner = this.Data.Users
+                    .FirstOrDefault(u => u.UserName == model.WallOwnerUsername);
+
+                if (wallOwner == null)
+                {
+                    return this.BadRequest(string.Format(
+                        "User {0} does not exist",
+                        model.WallOwnerUsername));
+                }
+
+                string loggedUserId = this.User.Identity.GetUserId();
+                var loggedUser = this.Data.Users.Find(loggedUserId);
+                var post = this.Data.Posts.Find(id);
+
+                loggedUser.RetweetedPosts.Add(post);
+                this.Data.SaveChanges();
+
+                var loggedUserWall = this.Data.Posts
+                .Where(p => p.WallOwnerId == loggedUserId)
+                .Select(PostViewModel.Create);
+
+                return this.Ok(loggedUserWall);
             }
         }
     }

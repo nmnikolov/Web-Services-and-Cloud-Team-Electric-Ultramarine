@@ -40,14 +40,6 @@ namespace Twitter.Services.Models
                     {
                         Username = p.Author.UserName
                     },
-                    WallOwner = new UserViewModel()
-                    {
-                        Username = p.WallOwner.UserName,
-                        Location = p.WallOwner.Location,
-                        TweetsCount = p.WallOwner.OwnPosts.Count + p.WallOwner.RetweetedPosts.Count,
-                        FollowersCount = p.WallOwner.Followers.Count,
-                        FollowingCount = p.WallOwner.FollowedFriends.Count
-                    },
                     PostedOn = p.PostedOn,
                     RepliesCount = p.Replies.Count(),
                     FavoritesCount = p.Favorites.Count(),

@@ -22,9 +22,9 @@ namespace Twitter.Services.Controllers
                 return this.BadRequest();
             }
 
-            var userWall = this.Data.Posts
-                .Where(p => p.WallOwnerId == user.Id)
-                .Select(PostViewModel.Create);
+            var userWall = this.Data.Users
+                .Where(u => u.Id == user.Id)
+                .Select(WallOwnerViewModel.Create);
 
             return this.Ok(userWall);
         }
