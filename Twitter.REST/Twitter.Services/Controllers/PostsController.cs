@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
-using SocialNetwork.Services.Controllers;
 using Twitter.Models;
 using Twitter.Services.Models;
 

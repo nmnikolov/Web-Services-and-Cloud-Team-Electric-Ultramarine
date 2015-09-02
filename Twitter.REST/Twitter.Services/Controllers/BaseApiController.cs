@@ -1,16 +1,16 @@
-﻿namespace SocialNetwork.Services.Controllers
+﻿namespace Twitter.Services.Controllers
 {
     using System.Web.Http;
-    using Twitter.Data;
+    using Data;
 
-    public class BaseApiController : ApiController
+    public abstract class BaseApiController : ApiController
     {
-        public BaseApiController()
+        protected BaseApiController()
             : this(new TwitterContext())
         {
         }
 
-        public BaseApiController(TwitterContext data)
+        protected BaseApiController(TwitterContext data)
         {
             this.Data = data;
         }

@@ -3,7 +3,6 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Http.OData;
 using Microsoft.AspNet.Identity;
-using SocialNetwork.Services.Controllers;
 using Twitter.Services.Models;
 
 namespace Twitter.Services.Controllers
@@ -28,44 +27,119 @@ namespace Twitter.Services.Controllers
 
             return this.Ok(userWall);
         }
-        [Authorize]
+
+        //[Authorize]
+        //[HttpPost]
+        //public IHttpActionResult FollowUser(string username, [FromBody]AddPostBindingModel model)
+        //{
+        //    var wallOwner = this.Data.Users.FirstOrDefault(u => u.UserName == username);
+        //    if (wallOwner == null)
+        //    {
+        //        return this.BadRequest();
+        //    }
+
+        //    var wallOwnerWall = this.Data.Posts
+        //        .Where(p => p.WallOwnerId == wallOwner.Id)
+        //        .Select(PostViewModel.Create);
+        //    if (model == null)
+        //    {
+        //        return this.BadRequest("Model cannot be null (no data in request)");
+        //    }
+
+        //    if (!this.ModelState.IsValid)
+        //    {
+        //        return this.BadRequest(this.ModelState);
+        //    }
+
+        //    string loggedUserId = this.User.Identity.GetUserId();
+        //    var loggedUser = this.Data.Users.Find(loggedUserId);
+        //    if (loggedUserId==wallOwner.Id)
+        //    {
+        //        return this.BadRequest("You cannot follow yourself");
+        //    }
+
+        //    if (wallOwner.Followers.Contains(loggedUser))
+        //    {
+        //        return this.BadRequest(string.Format(
+        //            "You already follow {0}",model.WallOwnerUsername));
+        //    }
+
+        //    wallOwner.Followers.Add(loggedUser);
+        //    loggedUser.FollowedFriends.Add(wallOwner);
+        //    this.Data.SaveChanges();
+        //    return this.Ok();
+        //}
+
         [HttpPost]
-        public IHttpActionResult FollowUser(string username, [FromBody]AddPostBindingModel model)
+        [Route("api/users/{username}/follow")]
+        public IHttpActionResult FollowUser(string username)
         {
-            var wallOwner = this.Data.Users.FirstOrDefault(u => u.UserName == username);
-            if (wallOwner == null)
+            var userId = this.User.Identity.GetUserId();
+            if (userId == null)
             {
-                return this.BadRequest();
+                return this.BadRequest("Invalid session token.");
             }
 
-            var wallOwnerWall = this.Data.Posts
-                .Where(p => p.WallOwnerId == wallOwner.Id)
-                .Select(PostViewModel.Create);
-            if (model == null)
+            var user = this.Data.Users.Find(userId);
+
+            var followedUser = this.Data.Users.FirstOrDefault(u => u.UserName == username);
+
+            if (followedUser == null)
             {
-                return this.BadRequest("Model cannot be null (no data in request)");
+                return this.NotFound();
             }
 
-            if (!this.ModelState.IsValid)
-            {
-                return this.BadRequest(this.ModelState);
-            }
-            string loggedUserId = this.User.Identity.GetUserId();
-            var loggedUser = this.Data.Users.Find(loggedUserId);
-            if (loggedUserId==wallOwner.Id)
+            if (followedUser.Id == userId)
             {
                 return this.BadRequest("You cannot follow yourself");
             }
-            if (wallOwner.Followers.Contains(loggedUser))
+
+            if (followedUser.Followers.Contains(user))
             {
-                return this.BadRequest(string.Format(
-                    "You already follow {0}",model.WallOwnerUsername));
+                return this.BadRequest("Already followed this user");
             }
-            wallOwner.Followers.Add(loggedUser);
-            loggedUser.FollowedFriends.Add(wallOwner);
+
+            followedUser.Followers.Add(user);
             this.Data.SaveChanges();
+
             return this.Ok();
         }
+
+        [HttpPost]
+        [Route("api/users/{username}/unfollow")]
+        public IHttpActionResult UnfollowUser(string username)
+        {
+            var userId = this.User.Identity.GetUserId();
+            if (userId == null)
+            {
+                return this.BadRequest("Invalid session token.");
+            }
+
+            var user = this.Data.Users.Find(userId);
+
+            var followedUser = this.Data.Users.FirstOrDefault(u => u.UserName == username);
+
+            if (followedUser == null)
+            {
+                return this.NotFound();
+            }
+
+            if (followedUser.Id == userId)
+            {
+                return this.BadRequest("You cannot unfollow yourself");
+            }
+
+            if (!followedUser.Followers.Contains(user))
+            {
+                return this.BadRequest("Not following this user.");
+            }
+
+            followedUser.Followers.Remove(user);
+            this.Data.SaveChanges();
+
+            return this.Ok();
+        }
+
         // GET api/users/search?name=..
         [ActionName("search")]
         [HttpGet]

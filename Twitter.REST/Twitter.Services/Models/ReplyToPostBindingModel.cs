@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Twitter.Services.Models
+﻿namespace Twitter.Services.Models
 {
+    using System.ComponentModel.DataAnnotations;
+
     public class ReplyToPostBindingModel
     {
         [Required]
