@@ -40,7 +40,7 @@ namespace Twitter.Services.Controllers
             var reply = new Reply()
             {
                 Content = model.Content,
-                PostedOn = DateTime.Now,
+                PostedOn = DateTime.UtcNow,
                 AuthorId = loggedUserId
             };
 

@@ -24,8 +24,7 @@ namespace Twitter.Services.Controllers
 
             // POST api/posts/{username}
             [HttpPost]
-            [Route("{username}")]
-            public IHttpActionResult AddPost(string username, [FromBody]AddPostBindingModel model)
+            public IHttpActionResult AddPost([FromBody]AddPostBindingModel model)
             {
                 var loggedUserId = this.User.Identity.GetUserId();
                 var loggedUser = this.Data.Users.Find(loggedUserId);
@@ -44,7 +43,7 @@ namespace Twitter.Services.Controllers
                     return this.BadRequest(this.ModelState);
                 }
 
-                var wallOwner = this.Data.Users.FirstOrDefault(u => u.UserName == username);
+                var wallOwner = this.Data.Users.FirstOrDefault(u => u.UserName == model.WallOwnerUsername);
                 
                 if (wallOwner == null)
                 {
@@ -58,7 +57,7 @@ namespace Twitter.Services.Controllers
                     AuthorId = loggedUserId,
                     WallOwner = wallOwner,
                     Content = model.Content,
-                    PostedOn = DateTime.Now,
+                    PostedOn = DateTime.UtcNow,
                 };
 
                 this.Data.Posts.Add(post);
@@ -158,7 +157,7 @@ namespace Twitter.Services.Controllers
                     AuthorId = post.AuthorId,
                     WallOwner = loggedUser,
                     Content = post.Content,
-                    PostedOn = DateTime.Now,
+                    PostedOn = DateTime.UtcNow,
                 };
                 this.Data.Posts.Add(retweetedPost);
                 this.Data.SaveChanges();
