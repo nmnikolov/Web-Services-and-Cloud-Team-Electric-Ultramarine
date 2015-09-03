@@ -74,19 +74,13 @@ namespace Twitter.Services.Controllers
             // PUT api/posts/{id}
             [HttpPut]
             [Route("{id}")]
-            public IHttpActionResult EditPost(int id,[FromBody]EditPostBindingModel model)
+            public IHttpActionResult EditPost(int id, [FromBody]EditPostBindingModel model)
             {
                 var loggedUserId = this.User.Identity.GetUserId();
                 var loggedUser = this.Data.Users.Find(loggedUserId);
                 if (loggedUser == null)
                 {
                     return this.BadRequest("Invalid session token.");
-                }
-
-                var post = this.Data.Posts.Find(id);
-                if (post == null)
-                {
-                    return this.NotFound();
                 }
 
                 if (model == null)
@@ -97,6 +91,17 @@ namespace Twitter.Services.Controllers
                 if (!this.ModelState.IsValid)
                 {
                     return this.BadRequest(this.ModelState);
+                }
+
+                var post = this.Data.Posts.Find(id);
+                if (post == null)
+                {
+                    return this.NotFound();
+                }
+
+                if (post.AuthorId != loggedUserId)
+                {
+                    return this.Unauthorized();
                 }
 
                 post.Content = model.Content;
@@ -128,11 +133,17 @@ namespace Twitter.Services.Controllers
                     return this.NotFound();
                 }
 
+                if (post.AuthorId != loggedUserId && post.WallOwnerId != loggedUserId)
+                {
+                    return this.Unauthorized();
+                }
+
                 this.Data.Posts.Remove(post);
                 this.Data.SaveChanges();
 
                 return this.Ok();
             }
+
             // POST api/posts/{id}/retweet
             [HttpPost]
             [Route("{id}/retweet")]
