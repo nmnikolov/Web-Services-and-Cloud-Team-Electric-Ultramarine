@@ -1,7 +1,10 @@
 ﻿namespace Twitter.Services.Models
 {
+    using System.ComponentModel.DataAnnotations;
+
     public class UserSearchBindingModel
     {
-        public string Name { get; set; }
+        [Required]
+        public string Search { get; set; }
     }
 }

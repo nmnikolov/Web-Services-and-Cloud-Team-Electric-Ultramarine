@@ -101,6 +101,7 @@ namespace Twitter.Services.Controllers
             }
 
             followedUser.Followers.Add(loggedUser);
+            loggedUser.FollowedFriends.Add(followedUser);
             this.Data.SaveChanges();
 
             return this.Ok();
@@ -135,33 +136,38 @@ namespace Twitter.Services.Controllers
             }
 
             followedUser.Followers.Remove(loggedUser);
+            loggedUser.FollowedFriends.Remove(followedUser);
             this.Data.SaveChanges();
 
             return this.Ok();
         }
 
-        // GET api/users/search?name=..
-        [ActionName("search")]
+        // GET api/users?search=..
         [HttpGet]
         [AllowAnonymous]
         public IHttpActionResult SearchUser([FromUri]UserSearchBindingModel model)
         {
-            var usersSearchResult = this.Data.Users.AsQueryable();
-
-            if (model.Name != null)
+            if (model == null)
             {
-                usersSearchResult = usersSearchResult.Where(u => u.UserName.Contains(model.Name) || u.Fullname.Contains(model.Name));
+                return this.BadRequest("Model cannot be null (no data in request)");
             }
 
-            var finalSearchResult = usersSearchResult
+            if (!this.ModelState.IsValid)
+            {
+                return this.BadRequest(this.ModelState);
+            }
+
+            var usersSearchResult = this.Data.Users
+                .Where(u => u.UserName.Contains(model.Search) || u.Fullname.Contains(model.Search))
                 .OrderBy(u => u.UserName)
                 .Select(u => new
                 {
                     u.UserName,
+                    u.Fullname,
                     u.Location
                 });
 
-            return this.Ok(finalSearchResult);
+            return this.Ok(usersSearchResult);
         }
     }
 }
