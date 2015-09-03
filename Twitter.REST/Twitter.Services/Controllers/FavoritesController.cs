@@ -12,17 +12,17 @@ namespace Twitter.Services.Controllers
         [HttpPost]
         public IHttpActionResult FavoritePost(int postId)
         {
+            var loggedUserId = this.User.Identity.GetUserId();
+            var loggedUser = this.Data.Users.Find(loggedUserId);
+            if (loggedUser == null)
+            {
+                return this.BadRequest("Invalid session token.");
+            }
+
             var post = this.Data.Posts.Find(postId);
             if (post == null)
             {
                 return this.NotFound();
-            }
-
-            var loggedUserId = this.User.Identity.GetUserId();
-
-            if (loggedUserId==null)
-            {
-                return this.BadRequest("Join Twitter and favorite all the stuff you like.");
             }
 
             var isAlreadyLiked = post.Favorites

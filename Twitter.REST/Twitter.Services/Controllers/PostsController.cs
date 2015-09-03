@@ -27,6 +27,13 @@ namespace Twitter.Services.Controllers
             [Route("{username}")]
             public IHttpActionResult AddPost(string username, [FromBody]AddPostBindingModel model)
             {
+                var loggedUserId = this.User.Identity.GetUserId();
+                var loggedUser = this.Data.Users.Find(loggedUserId);
+                if (loggedUser == null)
+                {
+                    return this.BadRequest("Invalid session token.");
+                }
+
                 if (model == null)
                 {
                     return this.BadRequest("Model cannot be null (no data in request)");
@@ -38,8 +45,6 @@ namespace Twitter.Services.Controllers
                 }
 
                 var wallOwner = this.Data.Users.FirstOrDefault(u => u.UserName == username);
-
-                string loggedUserId = this.User.Identity.GetUserId();
                 
                 if (wallOwner == null)
                 {
@@ -47,6 +52,7 @@ namespace Twitter.Services.Controllers
                         "User {0} does not exist",
                         model.WallOwnerUsername));
                 }
+
                 var post = new Post()
                 {
                     AuthorId = loggedUserId,
@@ -71,16 +77,17 @@ namespace Twitter.Services.Controllers
             [Route("{id}")]
             public IHttpActionResult EditPost(int id,[FromBody]EditPostBindingModel model)
             {
+                var loggedUserId = this.User.Identity.GetUserId();
+                var loggedUser = this.Data.Users.Find(loggedUserId);
+                if (loggedUser == null)
+                {
+                    return this.BadRequest("Invalid session token.");
+                }
+
                 var post = this.Data.Posts.Find(id);
                 if (post == null)
                 {
                     return this.NotFound();
-                }
-
-                var loggedUserId = this.User.Identity.GetUserId();
-                if (loggedUserId != post.AuthorId)
-                {
-                    return this.Unauthorized();
                 }
 
                 if (model == null)
@@ -109,18 +116,17 @@ namespace Twitter.Services.Controllers
             [Route("{id}")]
             public IHttpActionResult DeletePost(int id)
             {
+                var loggedUserId = this.User.Identity.GetUserId();
+                var loggedUser = this.Data.Users.Find(loggedUserId);
+                if (loggedUser == null)
+                {
+                    return this.BadRequest("Invalid session token.");
+                }
+
                 var post = this.Data.Posts.Find(id);
                 if (post == null)
                 {
                     return this.NotFound();
-                }
-
-                var loggedUserId = this.User.Identity.GetUserId();
-
-                if (loggedUserId != post.AuthorId &&
-                    loggedUserId != post.WallOwnerId)
-                {
-                    return this.Unauthorized();
                 }
 
                 this.Data.Posts.Remove(post);
@@ -133,6 +139,13 @@ namespace Twitter.Services.Controllers
             [Route("{id}/retweet")]
             public IHttpActionResult RetweetPost(int id)
             {
+                var loggedUserId = this.User.Identity.GetUserId();
+                var loggedUser = this.Data.Users.Find(loggedUserId);
+                if (loggedUser == null)
+                {
+                    return this.BadRequest("Invalid session token.");
+                }
+
                 var post = this.Data.Posts.Find(id);
                 if (post==null)
                 {
@@ -140,13 +153,6 @@ namespace Twitter.Services.Controllers
                 }
 
                 var wallOwner = this.Data.Users.FirstOrDefault(u => u.Id == post.WallOwnerId);
-                
-                string loggedUserId = this.User.Identity.GetUserId();
-                if (loggedUserId==null)
-                {
-                    return this.BadRequest("Please login to retweet this post");
-                }
-                var loggedUser = this.Data.Users.Find(loggedUserId);
                 var retweetedPost = new Post()
                 {
                     AuthorId = post.AuthorId,

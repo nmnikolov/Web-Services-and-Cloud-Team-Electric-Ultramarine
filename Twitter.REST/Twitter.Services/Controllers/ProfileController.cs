@@ -12,17 +12,16 @@
         [Route("api/profile/home")]
         public IHttpActionResult GetHomePage()
         {
-            var userId = this.User.Identity.GetUserId();
-            if (userId == null)
+            var loggedUserId = this.User.Identity.GetUserId();
+            var loggedUser = this.Data.Users.Find(loggedUserId);
+            if (loggedUser == null)
             {
                 return this.BadRequest("Invalid session token.");
             }
 
-            //var user = this.Data.Users.Find(userId);
-
             var candidatePosts = this.Data.Posts
-                .Where(p => p.Author.Followers.Any(fr => fr.Id == userId) ||
-                    p.WallOwner.Followers.Any(fr => fr.Id == userId))
+                .Where(p => p.Author.Followers.Any(fr => fr.Id == loggedUserId) ||
+                    p.WallOwner.Followers.Any(fr => fr.Id == loggedUserId))
                 .OrderByDescending(p => p.PostedOn)
                 .AsEnumerable();
 
@@ -31,6 +30,38 @@
                 .Select(p => PostViewModel.Create);
 
             return this.Ok(homePosts);
+        }
+
+        [HttpGet]
+        [Route("api/profile/followers")]
+        public IHttpActionResult Followers()
+        {
+            var loggedUserId = this.User.Identity.GetUserId();
+            var loggedUser = this.Data.Users.Find(loggedUserId);
+            if (loggedUser == null)
+            {
+                return this.BadRequest("Invalid session token.");
+            }
+
+            var followers = loggedUser.Followers.AsQueryable().Select(FollowersViewModel.Create);
+
+            return this.Ok(followers);
+        }
+
+        [HttpGet]
+        [Route("api/profile/following")]
+        public IHttpActionResult Following()
+        {
+            var loggedUserId = this.User.Identity.GetUserId();
+            var loggedUser = this.Data.Users.Find(loggedUserId);
+            if (loggedUser == null)
+            {
+                return this.BadRequest("Invalid session token.");
+            }
+
+            var following = loggedUser.FollowedFriends.AsQueryable().Select(FollowersViewModel.Create);
+
+            return this.Ok(following);
         }
     }
 }

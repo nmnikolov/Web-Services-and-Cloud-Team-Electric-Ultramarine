@@ -228,6 +228,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AddPostBindingModel.cs" />
     <Compile Include="Models\EditPostBindingModel.cs" />
+    <Compile Include="Models\FollowersViewModel.cs" />
     <Compile Include="Models\PostViewModel.cs" />
     <Compile Include="Models\ReplyToPostBindingModel.cs" />
     <Compile Include="Models\ReplyViewModel.cs" />

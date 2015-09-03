@@ -14,6 +14,13 @@ namespace Twitter.Services.Controllers
         [Route("api/posts/{postId}/replies")]
         public IHttpActionResult ReplyToPost(int postId, ReplyToPostBindingModel model)
         {
+            var loggedUserId = this.User.Identity.GetUserId();
+            var loggedUser = this.Data.Users.Find(loggedUserId);
+            if (loggedUser == null)
+            {
+                return this.BadRequest("Invalid session token.");
+            }
+
             var post = this.Data.Posts.Find(postId);
             if (post == null)
             {
@@ -30,18 +37,11 @@ namespace Twitter.Services.Controllers
                 return this.BadRequest(this.ModelState);
             }
 
-            var userId = this.User.Identity.GetUserId();
-
-            if (userId == null)
-            {
-                return this.BadRequest("When you join Twitter, you can reply to anyone.");
-            }
-
             var reply = new Reply()
             {
                 Content = model.Content,
                 PostedOn = DateTime.Now,
-                AuthorId = userId
+                AuthorId = loggedUserId
             };
 
             post.Replies.Add(reply);

@@ -7,10 +7,12 @@ using Twitter.Services.Models;
 
 namespace Twitter.Services.Controllers
 {
+    [Authorize]
     public class UsersController : BaseApiController
     {
         [Route("api/users/{username}/wall")]
         [EnableQuery]
+        [AllowAnonymous]
         [ResponseType(typeof(IQueryable<AddPostBindingModel>))]
         public IHttpActionResult GetUserWall(string username)
         {
@@ -74,13 +76,12 @@ namespace Twitter.Services.Controllers
         [Route("api/users/{username}/follow")]
         public IHttpActionResult FollowUser(string username)
         {
-            var userId = this.User.Identity.GetUserId();
-            if (userId == null)
+            var loggedUserId = this.User.Identity.GetUserId();
+            var loggedUser = this.Data.Users.Find(loggedUserId);
+            if (loggedUser == null)
             {
                 return this.BadRequest("Invalid session token.");
             }
-
-            var user = this.Data.Users.Find(userId);
 
             var followedUser = this.Data.Users.FirstOrDefault(u => u.UserName == username);
 
@@ -89,17 +90,17 @@ namespace Twitter.Services.Controllers
                 return this.NotFound();
             }
 
-            if (followedUser.Id == userId)
+            if (followedUser.Id == loggedUserId)
             {
                 return this.BadRequest("You cannot follow yourself");
             }
 
-            if (followedUser.Followers.Contains(user))
+            if (followedUser.Followers.Contains(loggedUser))
             {
                 return this.BadRequest("Already followed this user");
             }
 
-            followedUser.Followers.Add(user);
+            followedUser.Followers.Add(loggedUser);
             this.Data.SaveChanges();
 
             return this.Ok();
@@ -109,13 +110,12 @@ namespace Twitter.Services.Controllers
         [Route("api/users/{username}/unfollow")]
         public IHttpActionResult UnfollowUser(string username)
         {
-            var userId = this.User.Identity.GetUserId();
-            if (userId == null)
+            var loggedUserId = this.User.Identity.GetUserId();
+            var loggedUser = this.Data.Users.Find(loggedUserId);
+            if (loggedUser == null)
             {
                 return this.BadRequest("Invalid session token.");
             }
-
-            var user = this.Data.Users.Find(userId);
 
             var followedUser = this.Data.Users.FirstOrDefault(u => u.UserName == username);
 
@@ -124,17 +124,17 @@ namespace Twitter.Services.Controllers
                 return this.NotFound();
             }
 
-            if (followedUser.Id == userId)
+            if (followedUser.Id == loggedUserId)
             {
                 return this.BadRequest("You cannot unfollow yourself");
             }
 
-            if (!followedUser.Followers.Contains(user))
+            if (!followedUser.Followers.Contains(loggedUser))
             {
                 return this.BadRequest("Not following this user.");
             }
 
-            followedUser.Followers.Remove(user);
+            followedUser.Followers.Remove(loggedUser);
             this.Data.SaveChanges();
 
             return this.Ok();
@@ -143,13 +143,14 @@ namespace Twitter.Services.Controllers
         // GET api/users/search?name=..
         [ActionName("search")]
         [HttpGet]
+        [AllowAnonymous]
         public IHttpActionResult SearchUser([FromUri]UserSearchBindingModel model)
         {
             var usersSearchResult = this.Data.Users.AsQueryable();
 
             if (model.Name != null)
             {
-                usersSearchResult = usersSearchResult.Where(u => u.UserName.Contains(model.Name));
+                usersSearchResult = usersSearchResult.Where(u => u.UserName.Contains(model.Name) || u.Fullname.Contains(model.Name));
             }
 
             var finalSearchResult = usersSearchResult
