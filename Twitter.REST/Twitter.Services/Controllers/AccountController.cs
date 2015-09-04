@@ -13,6 +13,7 @@
     using Microsoft.Owin.Security;
     using Microsoft.Owin.Security.Cookies;
     using Models;
+    using Models.Account;
     using Twitter.Models;
 
     [Authorize]

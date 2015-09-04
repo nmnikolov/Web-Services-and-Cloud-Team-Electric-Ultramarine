@@ -1,12 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Web.Http;
-using Microsoft.AspNet.Identity;
-using Twitter.Models;
-using Twitter.Services.Models;
-
-namespace Twitter.Services.Controllers
+﻿namespace Twitter.Services.Controllers
 {
+    using System;
+    using System.Linq;
+    using System.Web.Http;
+    using Microsoft.AspNet.Identity;
+    using Twitter.Models;
+    using Models.Replies;
+    using Models.Users;
+
     [Authorize]
     public class RepliesController : BaseApiController
     {

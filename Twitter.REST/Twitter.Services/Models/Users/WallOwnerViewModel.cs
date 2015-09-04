@@ -1,13 +1,12 @@
-﻿using WebGrease.Css.Extensions;
-
-namespace Twitter.Services.Models
+﻿namespace Twitter.Services.Models.Users
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
+    using Replies;
+    using Tweets;
     using Twitter.Models;
-
 
     public class WallOwnerViewModel
     {

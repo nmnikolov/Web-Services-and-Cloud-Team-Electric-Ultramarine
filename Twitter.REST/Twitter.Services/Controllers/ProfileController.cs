@@ -3,7 +3,8 @@
     using System.Linq;
     using System.Web.Http;
     using Microsoft.AspNet.Identity;
-    using Models;
+    using Models.Tweets;
+    using Models.Users;
 
     [Authorize]
     public class ProfileController : BaseApiController

@@ -1,10 +1,12 @@
-﻿namespace Twitter.Services.Models
+﻿namespace Twitter.Services.Models.Tweets
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
+    using Replies;
     using Twitter.Models;
+    using Users;
 
     public class TweetViewModel
     {

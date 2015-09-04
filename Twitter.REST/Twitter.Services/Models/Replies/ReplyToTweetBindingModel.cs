@@ -1,4 +1,4 @@
-﻿namespace Twitter.Services.Models
+﻿namespace Twitter.Services.Models.Replies
 {
     using System.ComponentModel.DataAnnotations;
 

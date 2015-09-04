@@ -241,18 +241,18 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\AccountBindingModels.cs" />
-    <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\AddTweetBindingModel.cs" />
-    <Compile Include="Models\EditTweetBindingModel.cs" />
-    <Compile Include="Models\EditUserBindingModel.cs" />
-    <Compile Include="Models\FollowersViewModel.cs" />
-    <Compile Include="Models\TweetViewModel.cs" />
-    <Compile Include="Models\ReplyToTweetBindingModel.cs" />
-    <Compile Include="Models\ReplyViewModel.cs" />
-    <Compile Include="Models\UserSearchBindingModel.cs" />
-    <Compile Include="Models\UserViewModel.cs" />
-    <Compile Include="Models\WallOwnerViewModel.cs" />
+    <Compile Include="Models\Account\AccountBindingModels.cs" />
+    <Compile Include="Models\Account\AccountViewModels.cs" />
+    <Compile Include="Models\Tweets\AddTweetBindingModel.cs" />
+    <Compile Include="Models\Tweets\EditTweetBindingModel.cs" />
+    <Compile Include="Models\Users\EditUserBindingModel.cs" />
+    <Compile Include="Models\Users\FollowersViewModel.cs" />
+    <Compile Include="Models\Tweets\TweetViewModel.cs" />
+    <Compile Include="Models\Replies\ReplyToTweetBindingModel.cs" />
+    <Compile Include="Models\Replies\ReplyViewModel.cs" />
+    <Compile Include="Models\Users\UserSearchBindingModel.cs" />
+    <Compile Include="Models\Users\UserViewModel.cs" />
+    <Compile Include="Models\Users\WallOwnerViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />

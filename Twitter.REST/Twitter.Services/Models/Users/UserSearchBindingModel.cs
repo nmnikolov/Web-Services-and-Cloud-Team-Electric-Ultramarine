@@ -1,4 +1,4 @@
-﻿namespace Twitter.Services.Models
+﻿namespace Twitter.Services.Models.Users
 {
     using System.ComponentModel.DataAnnotations;
 

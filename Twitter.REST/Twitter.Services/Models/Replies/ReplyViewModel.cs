@@ -1,9 +1,9 @@
-﻿using System.Linq.Expressions;
-using Twitter.Models;
-
-namespace Twitter.Services.Models
+﻿namespace Twitter.Services.Models.Replies
 {
     using System;
+    using System.Linq.Expressions;
+    using Twitter.Models;
+    using Users;
 
     public class ReplyViewModel
     {

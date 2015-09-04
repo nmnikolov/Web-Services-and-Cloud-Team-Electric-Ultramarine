@@ -1,12 +1,13 @@
-﻿using System.Linq;
-using System.Web.Http;
-using System.Web.Http.Description;
-using System.Web.Http.OData;
-using Microsoft.AspNet.Identity;
-using Twitter.Services.Models;
-
-namespace Twitter.Services.Controllers
+﻿namespace Twitter.Services.Controllers
 {
+    using System.Linq;
+    using System.Web.Http;
+    using System.Web.Http.Description;
+    using System.Web.Http.OData;
+    using Microsoft.AspNet.Identity;
+    using Models.Tweets;
+    using Models.Users;
+
     [Authorize]
     public class UsersController : BaseApiController
     {
