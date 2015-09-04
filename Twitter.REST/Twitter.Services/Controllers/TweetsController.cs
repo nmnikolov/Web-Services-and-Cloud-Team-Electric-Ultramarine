@@ -11,17 +11,23 @@
     [RoutePrefix("api/tweets")]
     public class TweetsController : BaseApiController
     {
-        // GET api/tweets
+        // GET api/tweets/{tweetId}
         [AllowAnonymous]
         [HttpGet]
-        [Route("")]
-        public IHttpActionResult GetAllTweets()
+        [Route("{tweetId}")]
+        public IHttpActionResult GetTweetById(int tweetId)
         {
-            var data = this.TwitterData.Tweets.All()
-                .OrderBy(p => p.PostedOn)
-                .Select(TweetViewModel.Create);
+            var tweet = this.TwitterData.Tweets.All()
+                .Where(t => t.Id == tweetId)
+                .Select(TweetViewModel.Create)
+                .FirstOrDefault();
 
-            return this.Ok(data);
+            if (tweet == null)
+            {
+                return this.NotFound();
+            }
+
+            return this.Ok(tweet);
         }
 
         // POST api/tweets/{username}

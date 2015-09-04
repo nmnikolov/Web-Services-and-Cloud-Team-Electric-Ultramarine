@@ -12,7 +12,6 @@
     using Microsoft.AspNet.Identity.Owin;
     using Microsoft.Owin.Security;
     using Microsoft.Owin.Security.Cookies;
-    using Models;
     using Models.Account;
     using Twitter.Models;
 
@@ -57,7 +56,7 @@
 
             return new UserInfoViewModel
             {
-                Email = User.Identity.GetUserName(),
+                Email = this.User.Identity.GetUserName(),
                 HasRegistered = externalLogin == null,
                 LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null
             };
@@ -121,7 +120,13 @@
                 return BadRequest(ModelState);
             }
 
-            var user = new ApplicationUser() { UserName = model.Username, Email = model.Email, Fullname = model.Fullname};
+            var user = new ApplicationUser()
+            {
+                UserName = model.Username, 
+                Email = model.Email, 
+                Fullname = model.Fullname, 
+                Gender = model.Gender
+            };
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 

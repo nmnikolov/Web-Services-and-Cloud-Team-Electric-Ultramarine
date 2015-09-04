@@ -1,6 +1,7 @@
 ﻿namespace Twitter.Services.Models.Account
 {
     using System.ComponentModel.DataAnnotations;
+    using Twitter.Models;
 
     // Models used as parameters to AccountController actions.
 
@@ -54,6 +55,10 @@
         [Required]
         [Display(Name = "Email")]
         public string Email { get; set; }
+
+        [Required]
+        [Display(Name = "Gender")]
+        public Gender Gender { get; set; }
     }
 
     public class RegisterExternalBindingModel

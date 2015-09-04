@@ -28,6 +28,8 @@
 
         public string ProfileImageData { get; set; }
 
+        public string ProfileImageDataMinified { get; set; }
+
         public string CoverImageData { get; set; }
 
         //public string Location { get; set; }

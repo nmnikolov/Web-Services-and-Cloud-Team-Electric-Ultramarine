@@ -42,16 +42,17 @@
                     RepliesCount = p.Replies.Count,
                     FavoritesCount = p.Favorites.Count,
                     Replies = p.Replies
-                        .OrderBy(c => c.PostedOn)
+                        .OrderBy(r => r.PostedOn)
                         .Take(3)
-                        .Select(c => new ReplyViewModel
+                        .Select(r => new ReplyViewModel
                         {
-                            Id = c.Id,
-                            Content = c.Content,
+                            Id = r.Id,
+                            Content = r.Content,
                             Author = new UserViewModel
                             {
-                                Username = c.Author.UserName
-                            }
+                                Username = r.Author.UserName
+                            },
+                            PostedOn = r.PostedOn
                         })
                 };
             }

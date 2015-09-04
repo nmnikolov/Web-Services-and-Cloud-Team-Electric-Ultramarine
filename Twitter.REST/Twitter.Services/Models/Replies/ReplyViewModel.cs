@@ -13,6 +13,8 @@
 
         public UserViewModel Author { get; set; }
 
+        public DateTime PostedOn { get; set; }
+
         public static Expression<Func<Reply, ReplyViewModel>> Create
         {
             get
@@ -21,10 +23,11 @@
                 {
                     Id = r.Id,
                     Content = r.Content,
-                    //Author = new UserViewModel()
-                    //{
-                    //    Username = r.Author.UserName
-                    //}
+                    Author = new UserViewModel
+                    {
+                        Username = r.Author.UserName
+                    },
+                    PostedOn = r.PostedOn
                 };
             }
         }

@@ -11,18 +11,21 @@
     [Authorize]
     public class RepliesController : BaseApiController
     {
-        //GET api/tweets/replies
+        // GET api/tweets/{tweetId}/replies/{replyId}
         [AllowAnonymous]
         [HttpGet]
-        [Route("api/replies")]
-        public IHttpActionResult GetAllReplies()
+        [Route("api/tweets/{tweetId}/replies")]
+        public IHttpActionResult GetTweetReplies(int tweetId)
         {
-            var replies = this.TwitterData.Replies.All()
-                .Select(r => new ReplyViewModel()
-                {
-                    Id = r.Id,
-                    Content = r.Content
-                });
+            var tweet = this.TwitterData.Tweets.Find(tweetId);
+
+            if (tweet == null)
+            {
+                return this.NotFound();
+            }
+
+            var replies = tweet.Replies.AsQueryable()
+                .Select(ReplyViewModel.Create);
 
             return this.Ok(replies);
         }
