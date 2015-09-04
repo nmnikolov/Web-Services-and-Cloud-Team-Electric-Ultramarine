@@ -13,21 +13,20 @@
         public IHttpActionResult GetHomePage()
         {
             var loggedUserId = this.User.Identity.GetUserId();
-            var loggedUser = this.Data.Users.Find(loggedUserId);
+            var loggedUser = this.TwitterData.Users.Find(loggedUserId);
             if (loggedUser == null)
             {
                 return this.BadRequest("Invalid session token.");
             }
 
-            var candidatePosts = this.Data.Posts
+            var candidatePosts = this.TwitterData.Posts.All()
                 .Where(p => p.Author.Followers.Any(fr => fr.Id == loggedUserId) ||
-                    p.WallOwner.Followers.Any(fr => fr.Id == loggedUserId))
-                .OrderByDescending(p => p.PostedOn)
-                .AsEnumerable();
+                            p.WallOwner.Followers.Any(fr => fr.Id == loggedUserId))
+                .OrderByDescending(p => p.PostedOn);
 
             var homePosts = candidatePosts
-                //.Take(feedModel.PageSize)
-                .Select(p => PostViewModel.Create);
+                //.Take(1)
+                .Select(PostViewModel.Create);
 
             return this.Ok(homePosts);
         }
@@ -37,7 +36,7 @@
         public IHttpActionResult Followers()
         {
             var loggedUserId = this.User.Identity.GetUserId();
-            var loggedUser = this.Data.Users.Find(loggedUserId);
+            var loggedUser = this.TwitterData.Users.Find(loggedUserId);
             if (loggedUser == null)
             {
                 return this.BadRequest("Invalid session token.");
@@ -53,7 +52,7 @@
         public IHttpActionResult Following()
         {
             var loggedUserId = this.User.Identity.GetUserId();
-            var loggedUser = this.Data.Users.Find(loggedUserId);
+            var loggedUser = this.TwitterData.Users.Find(loggedUserId);
             if (loggedUser == null)
             {
                 return this.BadRequest("Invalid session token.");

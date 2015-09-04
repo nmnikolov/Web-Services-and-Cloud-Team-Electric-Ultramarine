@@ -16,11 +16,12 @@ namespace Twitter.Services.Controllers
         [Route("api/replies")]
         public IHttpActionResult GetAllReplies()
         {
-            var replies = this.Data.Replies.Select(r => new ReplyViewModel()
-            {
-                Id = r.Id,
-                Content = r.Content
-            });
+            var replies = this.TwitterData.Replies.All()
+                .Select(r => new ReplyViewModel()
+                {
+                    Id = r.Id,
+                    Content = r.Content
+                });
 
             return this.Ok(replies);
         }
@@ -31,13 +32,13 @@ namespace Twitter.Services.Controllers
         public IHttpActionResult ReplyToPost(int postId, ReplyToPostBindingModel model)
         {
             var loggedUserId = this.User.Identity.GetUserId();
-            var loggedUser = this.Data.Users.Find(loggedUserId);
+            var loggedUser = this.TwitterData.Users.Find(loggedUserId);
             if (loggedUser == null)
             {
                 return this.BadRequest("Invalid session token.");
             }
 
-            var post = this.Data.Posts.Find(postId);
+            var post = this.TwitterData.Posts.Find(postId);
             if (post == null)
             {
                 return this.NotFound();
@@ -61,7 +62,7 @@ namespace Twitter.Services.Controllers
             };
 
             post.Replies.Add(reply);
-            this.Data.SaveChanges();
+            this.TwitterData.SaveChanges();
 
             return this.Ok();
         }
@@ -71,19 +72,19 @@ namespace Twitter.Services.Controllers
         public IHttpActionResult EditReplay(int postId, int replyId, ReplyToPostBindingModel model)
         {
             var loggedUserId = this.User.Identity.GetUserId();
-            var loggedUser = this.Data.Users.Find(loggedUserId);
+            var loggedUser = this.TwitterData.Users.Find(loggedUserId);
             if (loggedUser == null)
             {
-                return Unauthorized();
+                return this.Unauthorized();
             }
 
-            var post = this.Data.Posts.FirstOrDefault(p => p.Id == postId);
+            var post = this.TwitterData.Posts.All().FirstOrDefault(p => p.Id == postId);
             if (post == null)
             {
                 return this.NotFound();
             }
 
-            var reply = this.Data.Replies.FirstOrDefault(r => r.Id == replyId);
+            var reply = this.TwitterData.Replies.All().FirstOrDefault(r => r.Id == replyId);
             if (reply == null)
             {
                 return this.NotFound();
@@ -91,7 +92,7 @@ namespace Twitter.Services.Controllers
 
             if (reply.AuthorId != loggedUser.Id)
             {
-                return Unauthorized();
+                return this.Unauthorized();
             }
 
             if (model == null)
@@ -106,17 +107,18 @@ namespace Twitter.Services.Controllers
 
 
             reply.Content = model.Content;
-            this.Data.SaveChanges();
+            this.TwitterData.SaveChanges();
 
-            var replyFromDb = this.Data.Replies.Where(r => r.Id == replyId).Select(r => new ReplyViewModel()
-            {
-                Id = r.Id,
-                Content = r.Content,
-                Author = new UserViewModel()
+            var replyFromDb = this.TwitterData.Replies.All().Where(r => r.Id == replyId)
+                .Select(r => new ReplyViewModel()
                 {
-                    Username = r.Author.UserName
-                }
-            });
+                    Id = r.Id,
+                    Content = r.Content,
+                    Author = new UserViewModel()
+                    {
+                        Username = r.Author.UserName
+                    }
+                });
 
             return this.Ok(replyFromDb);
         }
@@ -126,19 +128,19 @@ namespace Twitter.Services.Controllers
         public IHttpActionResult DeleteReplay(int postId, int replyId, ReplyToPostBindingModel model)
         {
             var loggedUserId = this.User.Identity.GetUserId();
-            var loggedUser = this.Data.Users.Find(loggedUserId);
+            var loggedUser = this.TwitterData.Users.Find(loggedUserId);
             if (loggedUser == null)
             {
-                return Unauthorized();
+                return this.Unauthorized();
             }
 
-            var post = this.Data.Posts.FirstOrDefault(p => p.Id == postId);
+            var post = this.TwitterData.Posts.All().FirstOrDefault(p => p.Id == postId);
             if (post == null)
             {
                 return this.NotFound();
             }
 
-            var reply = this.Data.Replies.FirstOrDefault(r => r.Id == replyId);
+            var reply = this.TwitterData.Replies.All().FirstOrDefault(r => r.Id == replyId);
             if (reply == null)
             {
                 return this.NotFound();
@@ -146,7 +148,7 @@ namespace Twitter.Services.Controllers
 
             if (reply.AuthorId != loggedUser.Id && loggedUser.Id != post.WallOwnerId)
             {
-                return Unauthorized();
+                return this.Unauthorized();
             }
 
             if (model == null)
@@ -159,9 +161,9 @@ namespace Twitter.Services.Controllers
                 return this.BadRequest(this.ModelState);
             }
 
-            var replyFromDb = this.Data.Replies.FirstOrDefault(r => r.Id == replyId);
-            this.Data.Replies.Remove(replyFromDb);
-            this.Data.SaveChanges();
+            var replyFromDb = this.TwitterData.Replies.All().FirstOrDefault(r => r.Id == replyId);
+            this.TwitterData.Replies.Delete(replyFromDb);
+            this.TwitterData.SaveChanges();
 
             return this.Ok("Reply is deleted");
         }

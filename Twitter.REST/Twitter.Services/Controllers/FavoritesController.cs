@@ -1,10 +1,10 @@
-﻿using System.Linq;
-using System.Web.Http;
-using Microsoft.AspNet.Identity;
-using Twitter.Models;
-
-namespace Twitter.Services.Controllers
+﻿namespace Twitter.Services.Controllers
 {
+    using System.Linq;
+    using System.Web.Http;
+    using Microsoft.AspNet.Identity;
+    using Twitter.Models;
+
     public class FavoritesController : BaseApiController
     {
         // POST api/posts/{postId}/favorites
@@ -13,13 +13,13 @@ namespace Twitter.Services.Controllers
         public IHttpActionResult FavoritePost(int postId)
         {
             var loggedUserId = this.User.Identity.GetUserId();
-            var loggedUser = this.Data.Users.Find(loggedUserId);
+            var loggedUser = this.TwitterData.Users.Find(loggedUserId);
             if (loggedUser == null)
             {
                 return this.BadRequest("Invalid session token.");
             }
 
-            var post = this.Data.Posts.Find(postId);
+            var post = this.TwitterData.Posts.Find(postId);
             if (post == null)
             {
                 return this.NotFound();
@@ -42,7 +42,7 @@ namespace Twitter.Services.Controllers
                 UserId = loggedUserId
             });
 
-            this.Data.SaveChanges();
+            this.TwitterData.SaveChanges();
 
             return this.Ok();
         }

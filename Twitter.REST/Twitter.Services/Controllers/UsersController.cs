@@ -16,14 +16,14 @@ namespace Twitter.Services.Controllers
         [ResponseType(typeof(IQueryable<AddPostBindingModel>))]
         public IHttpActionResult GetUserWall(string username)
         {
-            var user = this.Data.Users
+            var user = this.TwitterData.Users.All()
                 .FirstOrDefault(u => u.UserName == username);
             if (user == null)
             {
                 return this.BadRequest();
             }
 
-            var userWall = this.Data.Users
+            var userWall = this.TwitterData.Users.All()
                 .Where(u => u.Id == user.Id)
                 .Select(WallOwnerViewModel.Create);
 
@@ -77,13 +77,13 @@ namespace Twitter.Services.Controllers
         public IHttpActionResult FollowUser(string username)
         {
             var loggedUserId = this.User.Identity.GetUserId();
-            var loggedUser = this.Data.Users.Find(loggedUserId);
+            var loggedUser = this.TwitterData.Users.Find(loggedUserId);
             if (loggedUser == null)
             {
                 return this.BadRequest("Invalid session token.");
             }
 
-            var followedUser = this.Data.Users.FirstOrDefault(u => u.UserName == username);
+            var followedUser = this.TwitterData.Users.All().FirstOrDefault(u => u.UserName == username);
 
             if (followedUser == null)
             {
@@ -102,7 +102,7 @@ namespace Twitter.Services.Controllers
 
             followedUser.Followers.Add(loggedUser);
             loggedUser.FollowedFriends.Add(followedUser);
-            this.Data.SaveChanges();
+            this.TwitterData.SaveChanges();
 
             return this.Ok();
         }
@@ -112,13 +112,13 @@ namespace Twitter.Services.Controllers
         public IHttpActionResult UnfollowUser(string username)
         {
             var loggedUserId = this.User.Identity.GetUserId();
-            var loggedUser = this.Data.Users.Find(loggedUserId);
+            var loggedUser = this.TwitterData.Users.Find(loggedUserId);
             if (loggedUser == null)
             {
                 return this.BadRequest("Invalid session token.");
             }
 
-            var followedUser = this.Data.Users.FirstOrDefault(u => u.UserName == username);
+            var followedUser = this.TwitterData.Users.All().FirstOrDefault(u => u.UserName == username);
 
             if (followedUser == null)
             {
@@ -137,7 +137,7 @@ namespace Twitter.Services.Controllers
 
             followedUser.Followers.Remove(loggedUser);
             loggedUser.FollowedFriends.Remove(followedUser);
-            this.Data.SaveChanges();
+            this.TwitterData.SaveChanges();
 
             return this.Ok();
         }
@@ -157,7 +157,7 @@ namespace Twitter.Services.Controllers
                 return this.BadRequest(this.ModelState);
             }
 
-            var usersSearchResult = this.Data.Users
+            var usersSearchResult = this.TwitterData.Users.All()
                 .Where(u => u.UserName.Contains(model.Search) || u.Fullname.Contains(model.Search))
                 .OrderBy(u => u.UserName)
                 .Select(u => new

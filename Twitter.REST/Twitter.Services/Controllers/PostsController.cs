@@ -15,7 +15,7 @@ namespace Twitter.Services.Controllers
             [AllowAnonymous]
             public IHttpActionResult GetAllPosts()
             {
-                var data = this.Data.Posts
+                var data = this.TwitterData.Posts.All()
                     .OrderBy(p => p.PostedOn)
                     .Select(PostViewModel.Create);
 
@@ -27,7 +27,7 @@ namespace Twitter.Services.Controllers
             public IHttpActionResult AddPost([FromBody]AddPostBindingModel model)
             {
                 var loggedUserId = this.User.Identity.GetUserId();
-                var loggedUser = this.Data.Users.Find(loggedUserId);
+                var loggedUser = this.TwitterData.Users.Find(loggedUserId);
                 if (loggedUser == null)
                 {
                     return this.BadRequest("Invalid session token.");
@@ -43,7 +43,7 @@ namespace Twitter.Services.Controllers
                     return this.BadRequest(this.ModelState);
                 }
 
-                var wallOwner = this.Data.Users.FirstOrDefault(u => u.UserName == model.WallOwnerUsername);
+                var wallOwner = this.TwitterData.Users.All().FirstOrDefault(u => u.UserName == model.WallOwnerUsername);
                 
                 if (wallOwner == null)
                 {
@@ -55,15 +55,15 @@ namespace Twitter.Services.Controllers
                 var post = new Post()
                 {
                     AuthorId = loggedUserId,
-                    WallOwner = wallOwner,
+                    WallOwnerId = wallOwner.Id,
                     Content = model.Content,
                     PostedOn = DateTime.UtcNow,
                 };
 
-                this.Data.Posts.Add(post);
-                this.Data.SaveChanges();
+                this.TwitterData.Posts.Add(post);
+                this.TwitterData.SaveChanges();
 
-                var data = this.Data.Posts
+                var data = this.TwitterData.Posts.All()
                     .Where(p => p.Id == post.Id)
                     .Select(PostViewModel.Create)
                     .FirstOrDefault();
@@ -77,7 +77,7 @@ namespace Twitter.Services.Controllers
             public IHttpActionResult EditPost(int id, [FromBody]EditPostBindingModel model)
             {
                 var loggedUserId = this.User.Identity.GetUserId();
-                var loggedUser = this.Data.Users.Find(loggedUserId);
+                var loggedUser = this.TwitterData.Users.Find(loggedUserId);
                 if (loggedUser == null)
                 {
                     return this.BadRequest("Invalid session token.");
@@ -93,7 +93,7 @@ namespace Twitter.Services.Controllers
                     return this.BadRequest(this.ModelState);
                 }
 
-                var post = this.Data.Posts.Find(id);
+                var post = this.TwitterData.Posts.Find(id);
                 if (post == null)
                 {
                     return this.NotFound();
@@ -105,9 +105,9 @@ namespace Twitter.Services.Controllers
                 }
 
                 post.Content = model.Content;
-                this.Data.SaveChanges();
+                this.TwitterData.SaveChanges();
 
-                var data = this.Data.Posts
+                var data = this.TwitterData.Posts.All()
                     .Where(p => p.Id == post.Id)
                     .Select(PostViewModel.Create)
                     .FirstOrDefault();
@@ -121,13 +121,13 @@ namespace Twitter.Services.Controllers
             public IHttpActionResult DeletePost(int id)
             {
                 var loggedUserId = this.User.Identity.GetUserId();
-                var loggedUser = this.Data.Users.Find(loggedUserId);
+                var loggedUser = this.TwitterData.Users.Find(loggedUserId);
                 if (loggedUser == null)
                 {
                     return this.BadRequest("Invalid session token.");
                 }
 
-                var post = this.Data.Posts.Find(id);
+                var post = this.TwitterData.Posts.Find(id);
                 if (post == null)
                 {
                     return this.NotFound();
@@ -138,8 +138,10 @@ namespace Twitter.Services.Controllers
                     return this.Unauthorized();
                 }
 
-                this.Data.Posts.Remove(post);
-                this.Data.SaveChanges();
+
+
+                this.TwitterData.Posts.Delete(post);
+                this.TwitterData.SaveChanges();
 
                 return this.Ok();
             }
@@ -150,19 +152,19 @@ namespace Twitter.Services.Controllers
             public IHttpActionResult RetweetPost(int id)
             {
                 var loggedUserId = this.User.Identity.GetUserId();
-                var loggedUser = this.Data.Users.Find(loggedUserId);
+                var loggedUser = this.TwitterData.Users.Find(loggedUserId);
                 if (loggedUser == null)
                 {
                     return this.BadRequest("Invalid session token.");
                 }
 
-                var post = this.Data.Posts.Find(id);
+                var post = this.TwitterData.Posts.Find(id);
                 if (post==null)
                 {
                     return this.BadRequest("Post does not exist");
                 }
 
-                var wallOwner = this.Data.Users.FirstOrDefault(u => u.Id == post.WallOwnerId);
+                var wallOwner = this.TwitterData.Users.All().FirstOrDefault(u => u.Id == post.WallOwnerId);
                 var retweetedPost = new Post()
                 {
                     AuthorId = post.AuthorId,
@@ -170,10 +172,10 @@ namespace Twitter.Services.Controllers
                     Content = post.Content,
                     PostedOn = DateTime.UtcNow,
                 };
-                this.Data.Posts.Add(retweetedPost);
-                this.Data.SaveChanges();
+                this.TwitterData.Posts.Add(retweetedPost);
+                this.TwitterData.SaveChanges();
 
-                var loggedUserWall = this.Data.Posts
+                var loggedUserWall = this.TwitterData.Posts.All()
                 .Where(p => p.WallOwnerId == loggedUserId)
                 .Select(PostViewModel.Create);
 
