@@ -8,23 +8,26 @@ using Twitter.Services.Models;
 namespace Twitter.Services.Controllers
 {
       [Authorize]
-      [RoutePrefix("api/posts")]
-        public class PostsController : BaseApiController
+      [RoutePrefix("api/tweets")]
+        public class TweetsController : BaseApiController
         {
-            // GET api/posts
+            // GET api/tweets
             [AllowAnonymous]
-            public IHttpActionResult GetAllPosts()
+            [HttpGet]
+            [Route("")]
+            public IHttpActionResult GetAllTweets()
             {
-                var data = this.TwitterData.Posts.All()
+                var data = this.TwitterData.Tweets.All()
                     .OrderBy(p => p.PostedOn)
-                    .Select(PostViewModel.Create);
+                    .Select(TweetViewModel.Create);
 
                 return this.Ok(data);
             }
 
-            // POST api/posts/{username}
+            // POST api/tweets/{username}
             [HttpPost]
-            public IHttpActionResult AddPost([FromBody]AddPostBindingModel model)
+            [Route("")]
+            public IHttpActionResult AddTweet([FromBody]AddTweetBindingModel model)
             {
                 var loggedUserId = this.User.Identity.GetUserId();
                 var loggedUser = this.TwitterData.Users.Find(loggedUserId);
@@ -52,7 +55,7 @@ namespace Twitter.Services.Controllers
                         model.WallOwnerUsername));
                 }
 
-                var post = new Post()
+                var tweet = new Tweet()
                 {
                     AuthorId = loggedUserId,
                     WallOwnerId = wallOwner.Id,
@@ -60,21 +63,21 @@ namespace Twitter.Services.Controllers
                     PostedOn = DateTime.UtcNow,
                 };
 
-                this.TwitterData.Posts.Add(post);
+                this.TwitterData.Tweets.Add(tweet);
                 this.TwitterData.SaveChanges();
 
-                var data = this.TwitterData.Posts.All()
-                    .Where(p => p.Id == post.Id)
-                    .Select(PostViewModel.Create)
+                var data = this.TwitterData.Tweets.All()
+                    .Where(p => p.Id == tweet.Id)
+                    .Select(TweetViewModel.Create)
                     .FirstOrDefault();
 
                 return this.Ok(data);
             }
 
-            // PUT api/posts/{id}
+            // PUT api/tweets/{id}
             [HttpPut]
             [Route("{id}")]
-            public IHttpActionResult EditPost(int id, [FromBody]EditPostBindingModel model)
+            public IHttpActionResult EditTweet(int id, [FromBody]EditTweetBindingModel model)
             {
                 var loggedUserId = this.User.Identity.GetUserId();
                 var loggedUser = this.TwitterData.Users.Find(loggedUserId);
@@ -93,32 +96,32 @@ namespace Twitter.Services.Controllers
                     return this.BadRequest(this.ModelState);
                 }
 
-                var post = this.TwitterData.Posts.Find(id);
-                if (post == null)
+                var tweet = this.TwitterData.Tweets.Find(id);
+                if (tweet == null)
                 {
                     return this.NotFound();
                 }
 
-                if (post.AuthorId != loggedUserId)
+                if (tweet.AuthorId != loggedUserId)
                 {
                     return this.Unauthorized();
                 }
 
-                post.Content = model.Content;
+                tweet.Content = model.Content;
                 this.TwitterData.SaveChanges();
 
-                var data = this.TwitterData.Posts.All()
-                    .Where(p => p.Id == post.Id)
-                    .Select(PostViewModel.Create)
+                var data = this.TwitterData.Tweets.All()
+                    .Where(p => p.Id == tweet.Id)
+                    .Select(TweetViewModel.Create)
                     .FirstOrDefault();
 
                 return this.Ok(data);
             }
 
-            // DELETE api/posts/{id}
+            // DELETE api/tweets/{id}
             [HttpDelete]
             [Route("{id}")]
-            public IHttpActionResult DeletePost(int id)
+            public IHttpActionResult DeleteTweet(int id)
             {
                 var loggedUserId = this.User.Identity.GetUserId();
                 var loggedUser = this.TwitterData.Users.Find(loggedUserId);
@@ -127,29 +130,27 @@ namespace Twitter.Services.Controllers
                     return this.BadRequest("Invalid session token.");
                 }
 
-                var post = this.TwitterData.Posts.Find(id);
-                if (post == null)
+                var tweet = this.TwitterData.Tweets.Find(id);
+                if (tweet == null)
                 {
                     return this.NotFound();
                 }
 
-                if (post.AuthorId != loggedUserId && post.WallOwnerId != loggedUserId)
+                if (tweet.AuthorId != loggedUserId && tweet.WallOwnerId != loggedUserId)
                 {
                     return this.Unauthorized();
                 }
-
-
-
-                this.TwitterData.Posts.Delete(post);
+                
+                this.TwitterData.Tweets.Delete(tweet);
                 this.TwitterData.SaveChanges();
 
                 return this.Ok();
             }
 
-            // POST api/posts/{id}/retweet
+            // POST api/tweets/{id}/retweet
             [HttpPost]
             [Route("{id}/retweet")]
-            public IHttpActionResult RetweetPost(int id)
+            public IHttpActionResult RetweetTweet(int id)
             {
                 var loggedUserId = this.User.Identity.GetUserId();
                 var loggedUser = this.TwitterData.Users.Find(loggedUserId);
@@ -158,26 +159,26 @@ namespace Twitter.Services.Controllers
                     return this.BadRequest("Invalid session token.");
                 }
 
-                var post = this.TwitterData.Posts.Find(id);
-                if (post==null)
+                var tweet = this.TwitterData.Tweets.Find(id);
+                if (tweet==null)
                 {
-                    return this.BadRequest("Post does not exist");
+                    return this.BadRequest("Tweet does not exist");
                 }
 
-                var wallOwner = this.TwitterData.Users.All().FirstOrDefault(u => u.Id == post.WallOwnerId);
-                var retweetedPost = new Post()
+                var wallOwner = this.TwitterData.Users.All().FirstOrDefault(u => u.Id == tweet.WallOwnerId);
+                var retweetedTweet = new Tweet()
                 {
-                    AuthorId = post.AuthorId,
+                    AuthorId = tweet.AuthorId,
                     WallOwner = loggedUser,
-                    Content = post.Content,
+                    Content = tweet.Content,
                     PostedOn = DateTime.UtcNow,
                 };
-                this.TwitterData.Posts.Add(retweetedPost);
+                this.TwitterData.Tweets.Add(retweetedTweet);
                 this.TwitterData.SaveChanges();
 
-                var loggedUserWall = this.TwitterData.Posts.All()
+                var loggedUserWall = this.TwitterData.Tweets.All()
                 .Where(p => p.WallOwnerId == loggedUserId)
-                .Select(PostViewModel.Create);
+                .Select(TweetViewModel.Create);
 
                 return this.Ok(loggedUserWall);
             }

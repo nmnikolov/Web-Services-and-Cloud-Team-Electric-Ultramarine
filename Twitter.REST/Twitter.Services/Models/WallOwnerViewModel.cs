@@ -23,7 +23,7 @@ namespace Twitter.Services.Models
 
         public int FavoritesCount { get; set; }
 
-        public IEnumerable<PostViewModel> WallPosts { get; set; }
+        public IEnumerable<TweetViewModel> WallTweets { get; set; }
 
         public static Expression<Func<ApplicationUser, WallOwnerViewModel>> Create
         {
@@ -32,12 +32,12 @@ namespace Twitter.Services.Models
                 return u => new WallOwnerViewModel()
                 {
                     Username = u.UserName,
-                    Location = u.Location,
-                    TweetsCount = u.WallPosts.Count,
+                    //Location = u.Location,
+                    TweetsCount = u.WallTweets.Count,
                     FollowersCount = u.Followers.Count,
                     FollowingCount = u.FollowedFriends.Count,
-                    FavoritesCount = (u.WallPosts.Sum(wp => wp.Favorites.Count)),
-                    WallPosts = u.WallPosts.Select(p => new PostViewModel()
+                    FavoritesCount = (u.WallTweets.Sum(wp => wp.Favorites.Count)),
+                    WallTweets = u.WallTweets.Select(p => new TweetViewModel()
                     {
                         Id = p.Id,
                         Content = p.Content,

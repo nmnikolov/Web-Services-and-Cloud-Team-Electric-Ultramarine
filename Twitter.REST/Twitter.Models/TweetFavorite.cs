@@ -2,13 +2,13 @@
 
 namespace Twitter.Models
 {
-    public class PostFavorite
+    public class TweetFavorite
     {
         public int Id { get; set; }
 
-        public int PostId { get; set; }
+        public int TweetId { get; set; }
 
-        public virtual Post Post { get; set; }
+        public virtual Tweet Tweet { get; set; }
 
         [Required]
         public string UserId { get; set; }

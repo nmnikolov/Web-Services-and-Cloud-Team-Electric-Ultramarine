@@ -15,9 +15,9 @@ namespace Twitter.Data
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<TwitterContext, Configuration>());
         }
 
-        public virtual IDbSet<Post> Posts { get; set; }
+        public virtual IDbSet<Tweet> Tweets { get; set; }
         public virtual IDbSet<Reply> Replies { get; set; }
-        public virtual IDbSet<PostFavorite> PostFavorites { get; set; }
+        public virtual IDbSet<TweetFavorite> TweetFavorites { get; set; }
 
         public static TwitterContext Create()
         {
@@ -47,12 +47,12 @@ namespace Twitter.Data
                 });
             
             modelBuilder.Entity<ApplicationUser>()
-                .HasMany(u => u.WallPosts)
+                .HasMany(u => u.WallTweets)
                 .WithRequired(p => p.WallOwner)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<ApplicationUser>()
-                .HasMany(u => u.OwnPosts)
+                .HasMany(u => u.OwnTweets)
                 .WithRequired(p => p.Author)
                 .WillCascadeOnDelete(false);
 

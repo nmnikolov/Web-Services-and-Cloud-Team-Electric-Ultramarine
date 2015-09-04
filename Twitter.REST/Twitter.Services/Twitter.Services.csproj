@@ -234,7 +234,7 @@
     <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\FavoritesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\PostsController.cs" />
+    <Compile Include="Controllers\TweetsController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Controllers\RepliesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
@@ -243,11 +243,12 @@
     </Compile>
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\AddPostBindingModel.cs" />
-    <Compile Include="Models\EditPostBindingModel.cs" />
+    <Compile Include="Models\AddTweetBindingModel.cs" />
+    <Compile Include="Models\EditTweetBindingModel.cs" />
+    <Compile Include="Models\EditUserBindingModel.cs" />
     <Compile Include="Models\FollowersViewModel.cs" />
-    <Compile Include="Models\PostViewModel.cs" />
-    <Compile Include="Models\ReplyToPostBindingModel.cs" />
+    <Compile Include="Models\TweetViewModel.cs" />
+    <Compile Include="Models\ReplyToTweetBindingModel.cs" />
     <Compile Include="Models\ReplyViewModel.cs" />
     <Compile Include="Models\UserSearchBindingModel.cs" />
     <Compile Include="Models\UserViewModel.cs" />

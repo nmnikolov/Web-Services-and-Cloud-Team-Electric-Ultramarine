@@ -2,7 +2,7 @@
 {
     using System.ComponentModel.DataAnnotations;
 
-    public class ReplyToPostBindingModel
+    public class ReplyToTweetBindingModel
     {
         [Required]
         [MinLength(5)]

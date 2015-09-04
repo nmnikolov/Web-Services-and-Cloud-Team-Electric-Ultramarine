@@ -19,16 +19,16 @@
                 return this.BadRequest("Invalid session token.");
             }
 
-            var candidatePosts = this.TwitterData.Posts.All()
+            var candidateTweets = this.TwitterData.Tweets.All()
                 .Where(p => p.Author.Followers.Any(fr => fr.Id == loggedUserId) ||
                             p.WallOwner.Followers.Any(fr => fr.Id == loggedUserId))
                 .OrderByDescending(p => p.PostedOn);
 
-            var homePosts = candidatePosts
+            var homeTweets = candidateTweets
                 //.Take(1)
-                .Select(PostViewModel.Create);
+                .Select(TweetViewModel.Create);
 
-            return this.Ok(homePosts);
+            return this.Ok(homeTweets);
         }
 
         [HttpGet]

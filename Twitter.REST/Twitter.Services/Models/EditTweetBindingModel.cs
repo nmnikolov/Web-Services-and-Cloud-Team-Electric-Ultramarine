@@ -2,7 +2,7 @@
 
 namespace Twitter.Services.Models
 {
-    public class EditPostBindingModel
+    public class EditTweetBindingModel
     {
         [Required]
         [MinLength(5)]

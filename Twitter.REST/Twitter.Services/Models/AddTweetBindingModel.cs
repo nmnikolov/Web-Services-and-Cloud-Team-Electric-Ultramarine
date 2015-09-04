@@ -6,7 +6,7 @@ using System.Web;
 
 namespace Twitter.Services.Models
 {
-    public class AddPostBindingModel
+    public class AddTweetBindingModel
     {
         [Required]
         [MinLength(5)]

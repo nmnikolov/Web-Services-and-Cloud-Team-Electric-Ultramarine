@@ -13,9 +13,9 @@ namespace Twitter.Models
 
         public DateTime PostedOn { get; set; }
 
-        public int PostId { get; set; }
+        public int TweetId { get; set; }
 
-        public virtual Post Post { get; set; }
+        public virtual Tweet Tweet { get; set; }
 
         [Required]
         public string AuthorId { get; set; }

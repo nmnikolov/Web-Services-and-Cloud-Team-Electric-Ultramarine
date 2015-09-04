@@ -5,15 +5,15 @@ namespace Twitter.Models
     using System;
     using System.Collections.Generic;
 
-    public class Post
+    public class Tweet
     {
         private ICollection<Reply> replies;
-        private ICollection<PostFavorite> favorites;
+        private ICollection<TweetFavorite> favorites;
 
-        public Post()
+        public Tweet()
         {
             this.replies = new HashSet<Reply>();
-            this.favorites = new HashSet<PostFavorite>();
+            this.favorites = new HashSet<TweetFavorite>();
         }
 
         public int Id { get; set; }
@@ -37,7 +37,7 @@ namespace Twitter.Models
             get { return this.replies; }
             set { this.replies = value; }
         }
-        public virtual ICollection<PostFavorite> Favorites
+        public virtual ICollection<TweetFavorite> Favorites
         {
             get { return this.favorites; }
             set { this.favorites = value; }

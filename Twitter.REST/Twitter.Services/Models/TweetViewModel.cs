@@ -6,7 +6,7 @@
     using System.Linq.Expressions;
     using Twitter.Models;
 
-    public class PostViewModel
+    public class TweetViewModel
     {
         public int Id { get; set; }
 
@@ -24,11 +24,11 @@
 
         public IEnumerable<ReplyViewModel> Replies { get; set; }
 
-        public static Expression<Func<Post, PostViewModel>> Create
+        public static Expression<Func<Tweet, TweetViewModel>> Create
         {
             get
             {
-                return p => new PostViewModel
+                return p => new TweetViewModel
                 {
                     Id = p.Id,
                     Content = p.Content,

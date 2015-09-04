@@ -7,10 +7,10 @@
 
     public class FavoritesController : BaseApiController
     {
-        // POST api/posts/{postId}/favorites
-        [Route("api/posts/{postId}/favorites")]
+        // POST api/tweets/{tweetId}/favorites
+        [Route("api/tweets/{tweetId}/favorites")]
         [HttpPost]
-        public IHttpActionResult FavoritePost(int postId)
+        public IHttpActionResult FavoriteTweet(int tweetId)
         {
             var loggedUserId = this.User.Identity.GetUserId();
             var loggedUser = this.TwitterData.Users.Find(loggedUserId);
@@ -19,25 +19,25 @@
                 return this.BadRequest("Invalid session token.");
             }
 
-            var post = this.TwitterData.Posts.Find(postId);
-            if (post == null)
+            var tweet = this.TwitterData.Tweets.Find(tweetId);
+            if (tweet == null)
             {
                 return this.NotFound();
             }
 
-            var isAlreadyLiked = post.Favorites
+            var isAlreadyLiked = tweet.Favorites
                 .Any(pf => pf.UserId == loggedUserId);
             if (isAlreadyLiked)
             {
-                return this.BadRequest("You have already favorited this post");
+                return this.BadRequest("You have already favorited this tweet");
             }
 
-            if (post.AuthorId == loggedUserId)
+            if (tweet.AuthorId == loggedUserId)
             {
-                return this.BadRequest("Cannot favorite own posts");
+                return this.BadRequest("Cannot favorite own tweets");
             }
 
-            post.Favorites.Add(new PostFavorite()
+            tweet.Favorites.Add(new TweetFavorite()
             {
                 UserId = loggedUserId
             });

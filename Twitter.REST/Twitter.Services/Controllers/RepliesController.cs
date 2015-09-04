@@ -10,7 +10,7 @@ namespace Twitter.Services.Controllers
     [Authorize]
     public class RepliesController : BaseApiController
     {
-        //GET api/posts/replies
+        //GET api/tweets/replies
         [AllowAnonymous]
         [HttpGet]
         [Route("api/replies")]
@@ -26,10 +26,10 @@ namespace Twitter.Services.Controllers
             return this.Ok(replies);
         }
 
-        // POST api/posts/{postId}/replies
+        // POST api/tweets/{tweetId}/replies
         [HttpPost]
-        [Route("api/posts/{postId}/replies")]
-        public IHttpActionResult ReplyToPost(int postId, ReplyToPostBindingModel model)
+        [Route("api/tweets/{tweetId}/replies")]
+        public IHttpActionResult ReplyToTweet(int tweetId, ReplyToTweetBindingModel model)
         {
             var loggedUserId = this.User.Identity.GetUserId();
             var loggedUser = this.TwitterData.Users.Find(loggedUserId);
@@ -38,8 +38,8 @@ namespace Twitter.Services.Controllers
                 return this.BadRequest("Invalid session token.");
             }
 
-            var post = this.TwitterData.Posts.Find(postId);
-            if (post == null)
+            var tweet = this.TwitterData.Tweets.Find(tweetId);
+            if (tweet == null)
             {
                 return this.NotFound();
             }
@@ -61,15 +61,16 @@ namespace Twitter.Services.Controllers
                 AuthorId = loggedUserId
             };
 
-            post.Replies.Add(reply);
+            tweet.Replies.Add(reply);
             this.TwitterData.SaveChanges();
 
             return this.Ok();
         }
 
+        // PUT api/tweets/{tweetId}/replies/{replyId}
         [HttpPut]
-        [Route("api/posts/{postId}/replies/{replyId}")]
-        public IHttpActionResult EditReplay(int postId, int replyId, ReplyToPostBindingModel model)
+        [Route("api/tweets/{tweetId}/replies/{replyId}")]
+        public IHttpActionResult EditReplay(int tweetId, int replyId, ReplyToTweetBindingModel model)
         {
             var loggedUserId = this.User.Identity.GetUserId();
             var loggedUser = this.TwitterData.Users.Find(loggedUserId);
@@ -78,8 +79,8 @@ namespace Twitter.Services.Controllers
                 return this.Unauthorized();
             }
 
-            var post = this.TwitterData.Posts.All().FirstOrDefault(p => p.Id == postId);
-            if (post == null)
+            var tweet = this.TwitterData.Tweets.All().FirstOrDefault(p => p.Id == tweetId);
+            if (tweet == null)
             {
                 return this.NotFound();
             }
@@ -124,8 +125,8 @@ namespace Twitter.Services.Controllers
         }
 
         [HttpDelete]
-        [Route("api/posts/{postId}/replies/{replyId}")]
-        public IHttpActionResult DeleteReplay(int postId, int replyId, ReplyToPostBindingModel model)
+        [Route("api/tweets/{tweetId}/replies/{replyId}")]
+        public IHttpActionResult DeleteReplay(int tweetId, int replyId)
         {
             var loggedUserId = this.User.Identity.GetUserId();
             var loggedUser = this.TwitterData.Users.Find(loggedUserId);
@@ -134,8 +135,8 @@ namespace Twitter.Services.Controllers
                 return this.Unauthorized();
             }
 
-            var post = this.TwitterData.Posts.All().FirstOrDefault(p => p.Id == postId);
-            if (post == null)
+            var tweet = this.TwitterData.Tweets.All().FirstOrDefault(p => p.Id == tweetId);
+            if (tweet == null)
             {
                 return this.NotFound();
             }
@@ -146,19 +147,9 @@ namespace Twitter.Services.Controllers
                 return this.NotFound();
             }
 
-            if (reply.AuthorId != loggedUser.Id && loggedUser.Id != post.WallOwnerId)
+            if (reply.AuthorId != loggedUser.Id && loggedUser.Id != tweet.WallOwnerId)
             {
                 return this.Unauthorized();
-            }
-
-            if (model == null)
-            {
-                return this.BadRequest("Empty model is not allowed");
-            }
-
-            if (!this.ModelState.IsValid)
-            {
-                return this.BadRequest(this.ModelState);
             }
 
             var replyFromDb = this.TwitterData.Replies.All().FirstOrDefault(r => r.Id == replyId);

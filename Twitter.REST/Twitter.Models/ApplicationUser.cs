@@ -1,42 +1,49 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
-
-namespace Twitter.Models
+﻿namespace Twitter.Models
 {
+    using Microsoft.AspNet.Identity;
+    using Microsoft.AspNet.Identity.EntityFramework;
+    using System.Collections.Generic;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
+
+
     public class ApplicationUser : IdentityUser
     {
-        private ICollection<Post> ownPosts;
-        private ICollection<Post> wallPosts;
+        private ICollection<Tweet> ownTweets;
+        private ICollection<Tweet> wallTweets;
         private ICollection<ApplicationUser> followers;
         private ICollection<ApplicationUser> followedFriends;
 
         public ApplicationUser()
         {
-            this.ownPosts = new HashSet<Post>();
-            this.wallPosts = new HashSet<Post>();
+            this.ownTweets = new HashSet<Tweet>();
+            this.wallTweets = new HashSet<Tweet>();
             this.followers = new HashSet<ApplicationUser>();
             this.followedFriends = new HashSet<ApplicationUser>();
         }
 
         public string Fullname { get; set; }
 
-        public string Location { get; set; }
+        public Gender Gender { get; set; }
 
-        public int? Age { get; set; }
+        public string ProfileImageData { get; set; }
 
-        public virtual ICollection<Post> OwnPosts
+        public string CoverImageData { get; set; }
+
+        //public string Location { get; set; }
+
+        //public int? Age { get; set; }
+
+        public virtual ICollection<Tweet> OwnTweets
         {
-            get { return this.ownPosts; }
-            set { this.ownPosts = value; }
+            get { return this.ownTweets; }
+            set { this.ownTweets = value; }
         }
 
-        public virtual ICollection<Post> WallPosts
+        public virtual ICollection<Tweet> WallTweets
         {
-            get { return this.wallPosts; }
-            set { this.wallPosts = value; }
+            get { return this.wallTweets; }
+            set { this.wallTweets = value; }
         }
         public virtual ICollection<ApplicationUser> Followers
         {
@@ -48,7 +55,8 @@ namespace Twitter.Models
             get { return this.followedFriends; }
             set { this.followedFriends = value; }
         }
-       public async Task<ClaimsIdentity> GenerateUserIdentityAsync(
+
+        public async Task<ClaimsIdentity> GenerateUserIdentityAsync(
             UserManager<ApplicationUser> manager,
             string authenticationType)
         {

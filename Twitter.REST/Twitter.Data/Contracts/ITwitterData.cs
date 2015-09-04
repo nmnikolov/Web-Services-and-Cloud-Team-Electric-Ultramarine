@@ -9,11 +9,11 @@
 
         IRepository<IdentityRole> UserRoles { get; }
 
-        IRepository<Post> Posts { get; }
+        IRepository<Tweet> Tweets { get; }
 
         IRepository<Reply> Replies { get; }
         
-        IRepository<PostFavorite> PostsFavorites { get; }
+        IRepository<TweetFavorite> TweetsFavorites { get; }
 
         int SaveChanges();
     }

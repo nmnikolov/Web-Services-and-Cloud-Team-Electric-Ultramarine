@@ -13,7 +13,7 @@ namespace Twitter.Services.Controllers
         [Route("api/users/{username}/wall")]
         [EnableQuery]
         [AllowAnonymous]
-        [ResponseType(typeof(IQueryable<AddPostBindingModel>))]
+        [ResponseType(typeof(IQueryable<AddTweetBindingModel>))]
         public IHttpActionResult GetUserWall(string username)
         {
             var user = this.TwitterData.Users.All()
@@ -40,7 +40,7 @@ namespace Twitter.Services.Controllers
         //        return this.BadRequest();
         //    }
 
-        //    var wallOwnerWall = this.Data.Posts
+        //    var wallOwnerWall = this.Data.Tweets
         //        .Where(p => p.WallOwnerId == wallOwner.Id)
         //        .Select(PostViewModel.Create);
         //    if (model == null)
@@ -164,7 +164,7 @@ namespace Twitter.Services.Controllers
                 {
                     u.UserName,
                     u.Fullname,
-                    u.Location
+                    //u.Location
                 });
 
             return this.Ok(usersSearchResult);

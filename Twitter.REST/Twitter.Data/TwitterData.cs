@@ -40,11 +40,11 @@
             }
         }
 
-        public IRepository<Post> Posts
+        public IRepository<Tweet> Tweets
         {
             get
             {
-                return this.GetRepository<Post>();
+                return this.GetRepository<Tweet>();
             }
         }
 
@@ -56,11 +56,11 @@
             }
         }
 
-        public IRepository<PostFavorite> PostsFavorites
+        public IRepository<TweetFavorite> TweetsFavorites
         {
             get
             {
-                return this.GetRepository<PostFavorite>();
+                return this.GetRepository<TweetFavorite>();
             }
         }
 
