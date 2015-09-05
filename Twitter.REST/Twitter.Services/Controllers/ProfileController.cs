@@ -1,6 +1,7 @@
 ﻿namespace Twitter.Services.Controllers
 {
     using System;
+    using System.Data.Entity;
     using System.Linq;
     using System.Web.Http;
     using Microsoft.AspNet.Identity;
@@ -13,7 +14,7 @@
     {
         [HttpGet]
         [Route("api/profile/home")]
-        public IHttpActionResult GetHomePage()
+        public IHttpActionResult GetHomePage([FromUri]NewsFeedBindingModel model)
         {
             var loggedUserId = this.User.Identity.GetUserId();
             var loggedUser = this.TwitterData.Users.Find(loggedUserId);
@@ -22,16 +23,63 @@
                 return this.BadRequest("Invalid session token.");
             }
 
+            if (model == null)
+            {
+                return this.BadRequest();
+            }
+
+            if (!this.ModelState.IsValid)
+            {
+                return this.BadRequest(this.ModelState);
+            }
+
             var candidateTweets = this.TwitterData.Tweets.All()
                 .Where(p => p.Author.Followers.Any(fr => fr.Id == loggedUserId) ||
                             p.WallOwner.Followers.Any(fr => fr.Id == loggedUserId))
-                .OrderByDescending(p => p.PostedOn);
+                .Include(p => p.Author)
+                .Include(p => p.WallOwner)
+                .Include(p => p.Replies)
+                .Include(p => p.Favorites)
+                .OrderByDescending(p => p.PostedOn)
+                .AsEnumerable();
+
+            if (model.StartPostId.HasValue)
+            {
+                candidateTweets = candidateTweets
+                    .SkipWhile(t => t.Id != model.StartPostId)
+                    .Skip(1);
+            }
 
             var homeTweets = candidateTweets
-                //.Take(1)
-                .Select(TweetViewModel.Create);
+                .Take(model.PageSize)
+                .AsQueryable()
+                .Select(TweetViewModel.Create)
+                .ToList();
 
             return this.Ok(homeTweets);
+        }
+
+        [HttpGet]
+        [Route("api/profile/")]
+        public IHttpActionResult GetProfileData()
+        {
+            var loggedUserId = this.User.Identity.GetUserId();
+            var loggedUser = this.TwitterData.Users.Find(loggedUserId);
+            if (loggedUser == null)
+            {
+                return this.BadRequest("Invalid session token.");
+            }
+
+            var profileDataView = new ProfileDataViewModel
+            {
+                Fullname = loggedUser.Fullname,
+                Email = loggedUser.Email,
+                Gender = loggedUser.Gender,
+                ProfileImageData = loggedUser.ProfileImageData,
+                CoverImageData = loggedUser.CoverImageData
+            };
+
+            return this.Ok(profileDataView);
         }
 
         [HttpGet]

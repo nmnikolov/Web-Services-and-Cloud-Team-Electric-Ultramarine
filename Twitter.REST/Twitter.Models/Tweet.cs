@@ -26,7 +26,7 @@ namespace Twitter.Models
 
         public string AuthorId { get; set; }
 
-        public ApplicationUser Author { get; set; }
+        public virtual ApplicationUser Author { get; set; }
         
         public string WallOwnerId { get; set; }
 

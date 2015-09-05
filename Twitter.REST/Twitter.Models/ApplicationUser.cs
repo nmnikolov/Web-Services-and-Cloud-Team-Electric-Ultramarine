@@ -13,6 +13,7 @@
         private ICollection<Tweet> wallTweets;
         private ICollection<ApplicationUser> followers;
         private ICollection<ApplicationUser> followedFriends;
+        private ICollection<TweetFavorite> favoritesTweets;
 
         public ApplicationUser()
         {
@@ -20,6 +21,7 @@
             this.wallTweets = new HashSet<Tweet>();
             this.followers = new HashSet<ApplicationUser>();
             this.followedFriends = new HashSet<ApplicationUser>();
+            this.favoritesTweets = new HashSet<TweetFavorite>();
         }
 
         public string Fullname { get; set; }
@@ -32,14 +34,16 @@
 
         public string CoverImageData { get; set; }
 
-        //public string Location { get; set; }
-
-        //public int? Age { get; set; }
-
         public virtual ICollection<Tweet> OwnTweets
         {
             get { return this.ownTweets; }
             set { this.ownTweets = value; }
+        }
+
+        public virtual ICollection<TweetFavorite> FavoritesTweets
+        {
+            get { return this.favoritesTweets; }
+            set { this.favoritesTweets = value; }
         }
 
         public virtual ICollection<Tweet> WallTweets

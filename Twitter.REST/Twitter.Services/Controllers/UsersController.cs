@@ -1,5 +1,6 @@
 ﻿namespace Twitter.Services.Controllers
 {
+    using System.Data.Entity;
     using System.Linq;
     using System.Web.Http;
     using System.Web.Http.Description;
@@ -14,21 +15,80 @@
         [Route("api/users/{username}/wall")]
         [EnableQuery]
         [AllowAnonymous]
-        [ResponseType(typeof(IQueryable<AddTweetBindingModel>))]
-        public IHttpActionResult GetUserWall(string username)
+        public IHttpActionResult GetUserTweets(string username, [FromUri] WallBindingModel model)
         {
-            var user = this.TwitterData.Users.All()
-                .FirstOrDefault(u => u.UserName == username);
-            if (user == null)
+            if (model == null)
             {
                 return this.BadRequest();
             }
 
-            var userWall = this.TwitterData.Users.All()
-                .Where(u => u.Id == user.Id)
-                .Select(WallOwnerViewModel.Create);
+            if (!this.ModelState.IsValid)
+            {
+                return this.BadRequest(this.ModelState);
+            }
 
-            return this.Ok(userWall);
+            var wallOwner = this.TwitterData.Users.All()
+                .FirstOrDefault(u => u.UserName == username);
+
+            if (wallOwner == null)
+            {
+                return this.NotFound();
+            }
+
+            var candidatePosts = wallOwner.WallTweets
+                .OrderByDescending(p => p.PostedOn)
+                .AsQueryable();
+
+            if (model.StartPostId.HasValue)
+            {
+                candidatePosts = candidatePosts
+                    .AsQueryable()
+                    .SkipWhile(p => p.Id != model.StartPostId)
+                    .Skip(1)
+                    .AsQueryable();
+            }
+
+            var pagePosts = candidatePosts
+                .Take(model.PageSize)
+                .Select(TweetViewModel.Create);
+
+            return this.Ok(pagePosts);
+        }
+
+        [Route("api/users/{username}")]
+        [EnableQuery]
+        [AllowAnonymous]
+        public IHttpActionResult GetUserFullInfo(string username)
+        {
+            var wallOwner = this.TwitterData.Users.All()
+                .Where(u => u.UserName == username)
+                .Select(ProfileDataViewModel.Create)
+                .FirstOrDefault();
+
+            if (wallOwner == null)
+            {
+                return this.NotFound();
+            }
+
+            return this.Ok(wallOwner);
+        }
+
+        [Route("api/users/{username}/preview")]
+        [EnableQuery]
+        [AllowAnonymous]
+        public IHttpActionResult GetUserPreviewInfo(string username)
+        {
+            var wallOwner = this.TwitterData.Users.All()
+                .Where(u => u.UserName == username)
+                .Select(ProfileDataPreviewViewModel.Create)
+                .FirstOrDefault();
+
+            if (wallOwner == null)
+            {
+                return this.NotFound();
+            }
+
+            return this.Ok(wallOwner);
         }
 
         //[Authorize]
@@ -145,6 +205,7 @@
 
         // GET api/users?search=..
         [HttpGet]
+        [Route("api/users/search")]
         [AllowAnonymous]
         public IHttpActionResult SearchUser([FromUri]UserSearchBindingModel model)
         {
@@ -165,6 +226,7 @@
                 {
                     u.UserName,
                     u.Fullname,
+                    u.ProfileImageData
                     //u.Location
                 });
 

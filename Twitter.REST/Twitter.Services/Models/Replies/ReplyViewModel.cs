@@ -25,7 +25,9 @@
                     Content = r.Content,
                     Author = new UserViewModel
                     {
-                        Username = r.Author.UserName
+                        Username = r.Author.UserName,
+                        Fullname = r.Author.Fullname,
+                        ProfileImageData = r.Author.ProfileImageData
                     },
                     PostedOn = r.PostedOn
                 };

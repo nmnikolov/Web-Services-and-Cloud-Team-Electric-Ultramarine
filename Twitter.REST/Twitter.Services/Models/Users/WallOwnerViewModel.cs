@@ -12,8 +12,12 @@
     {
         public string Username { get; set; }
 
-        public string Location { get; set; }
+        public string Fullname { get; set; }
 
+        public string ProfileImageData { get; set; }
+
+        public string CoverImageData { get; set; }
+        
         public int TweetsCount { get; set; }
 
         public int FollowersCount { get; set; }
@@ -28,35 +32,41 @@
         {
             get
             {
-                return u => new WallOwnerViewModel()
+                return u => new WallOwnerViewModel
                 {
                     Username = u.UserName,
-                    //Location = u.Location,
+                    Fullname = u.Fullname,
+                    ProfileImageData = u.ProfileImageData,
+                    CoverImageData = u.CoverImageData,
                     TweetsCount = u.WallTweets.Count,
                     FollowersCount = u.Followers.Count,
                     FollowingCount = u.FollowedFriends.Count,
-                    FavoritesCount = (u.WallTweets.Sum(wp => wp.Favorites.Count)),
-                    WallTweets = u.WallTweets.Select(p => new TweetViewModel()
+                    FavoritesCount = u.FavoritesTweets.Count,
+                    WallTweets = u.WallTweets.OrderByDescending(t => t.PostedOn).Select(t => new TweetViewModel()
                     {
-                        Id = p.Id,
-                        Content = p.Content,
-                        Author = new UserViewModel()
+                        Id = t.Id,
+                        Content = t.Content,
+                        Author = new UserViewModel
                         {
-                            Username = p.Author.UserName
+                            Username = t.Author.UserName,
+                            Fullname = t.Author.Fullname,
+                            ProfileImageData = t.Author.ProfileImageData
                         },
-                        PostedOn = p.PostedOn,
-                        RepliesCount = p.Replies.Count(),
-                        FavoritesCount = p.Favorites.Count(),
-                        Replies = p.Replies
+                        PostedOn = t.PostedOn,
+                        RepliesCount = t.Replies.Count,
+                        FavoritesCount = t.Favorites.Count,
+                        Replies = t.Replies
                             .OrderBy(c => c.PostedOn)
                             .Take(3)
-                            .Select(c => new ReplyViewModel()
+                            .Select(c => new ReplyViewModel
                             {
                                 Id = c.Id,
                                 Content = c.Content,
-                                Author = new UserViewModel()
+                                Author = new UserViewModel
                                 {
-                                    Username = c.Author.UserName
+                                    Username = c.Author.UserName,
+                                    Fullname = c.Author.Fullname,
+                                    ProfileImageData = c.Author.ProfileImageData
                                 }
                             })
                     })

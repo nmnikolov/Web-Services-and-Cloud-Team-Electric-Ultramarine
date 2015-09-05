@@ -14,6 +14,8 @@
 
         public string Content { get; set; }
 
+        public UserViewModel WallOwner { get; set; }
+
         public UserViewModel Author { get; set; }
 
         public DateTime PostedOn { get; set; }
@@ -36,13 +38,21 @@
                     Content = p.Content,
                     Author = new UserViewModel
                     {
-                        Username = p.Author.UserName
+                        Username = p.Author.UserName,
+                        Fullname = p.Author.Fullname,
+                        ProfileImageData = p.Author.ProfileImageData
+                    },
+                    WallOwner = new UserViewModel
+                    {
+                        Username = p.WallOwner.UserName,
+                        Fullname = p.WallOwner.Fullname,
+                        ProfileImageData = p.WallOwner.ProfileImageData
                     },
                     PostedOn = p.PostedOn,
                     RepliesCount = p.Replies.Count,
                     FavoritesCount = p.Favorites.Count,
                     Replies = p.Replies
-                        .OrderBy(r => r.PostedOn)
+                        .OrderByDescending(r => r.PostedOn)
                         .Take(3)
                         .Select(r => new ReplyViewModel
                         {
@@ -50,12 +60,53 @@
                             Content = r.Content,
                             Author = new UserViewModel
                             {
-                                Username = r.Author.UserName
+                                Username = r.Author.UserName,
+                                Fullname = r.Author.Fullname,
+                                ProfileImageData = r.Author.ProfileImageData
                             },
                             PostedOn = r.PostedOn
                         })
                 };
             }
+        }
+
+        public static TweetViewModel CreateView(Tweet t)
+        {
+            return new TweetViewModel
+            {
+                Id = t.Id,
+                Content = t.Content,
+                Author = new UserViewModel
+                {
+                    Username = t.Author.UserName,
+                    Fullname = t.Author.Fullname,
+                    ProfileImageData = t.Author.ProfileImageData
+                },
+                WallOwner = new UserViewModel
+                {
+                    Username = t.WallOwner.UserName,
+                    Fullname = t.WallOwner.Fullname,
+                    ProfileImageData = t.WallOwner.ProfileImageData
+                },
+                PostedOn = t.PostedOn,
+                RepliesCount = t.Replies.Count,
+                FavoritesCount = t.Favorites.Count,
+                Replies = t.Replies
+                    .OrderByDescending(r => r.PostedOn)
+                    .Take(3)
+                    .Select(r => new ReplyViewModel
+                    {
+                        Id = r.Id,
+                        Content = r.Content,
+                        Author = new UserViewModel
+                        {
+                            Username = r.Author.UserName,
+                            Fullname = r.Author.Fullname,
+                            ProfileImageData = r.Author.ProfileImageData
+                        },
+                        PostedOn = r.PostedOn
+                    })
+            };
         }
     }
 }

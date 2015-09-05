@@ -52,7 +52,8 @@
                 return this.BadRequest(this.ModelState);
             }
 
-            var wallOwner = this.TwitterData.Users.All().FirstOrDefault(u => u.UserName == model.WallOwnerUsername);
+            var wallOwner = this.TwitterData.Users.All()
+                .FirstOrDefault(u => u.UserName == model.WallOwnerUsername);
                 
             if (wallOwner == null)
             {
@@ -63,8 +64,10 @@
 
             var tweet = new Tweet()
             {
+                Author = loggedUser,
                 AuthorId = loggedUserId,
                 WallOwnerId = wallOwner.Id,
+                WallOwner = wallOwner,
                 Content = model.Content,
                 PostedOn = DateTime.UtcNow,
             };

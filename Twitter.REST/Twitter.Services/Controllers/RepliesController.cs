@@ -68,7 +68,12 @@
             tweet.Replies.Add(reply);
             this.TwitterData.SaveChanges();
 
-            return this.Ok();
+            var response = this.TwitterData.Replies.All()
+                .Where(r => r.Id == reply.Id)
+                .Select(ReplyViewModel.Create)
+                .FirstOrDefault();
+
+            return this.Ok(response);
         }
 
         // PUT api/tweets/{tweetId}/replies/{replyId}
@@ -115,15 +120,8 @@
             this.TwitterData.SaveChanges();
 
             var replyFromDb = this.TwitterData.Replies.All().Where(r => r.Id == replyId)
-                .Select(r => new ReplyViewModel()
-                {
-                    Id = r.Id,
-                    Content = r.Content,
-                    Author = new UserViewModel()
-                    {
-                        Username = r.Author.UserName
-                    }
-                });
+                .Select(ReplyViewModel.Create)
+                .FirstOrDefault();
 
             return this.Ok(replyFromDb);
         }

@@ -16,7 +16,7 @@
     using Twitter.Models;
 
     [Authorize]
-    [RoutePrefix("api/Account")]
+    [RoutePrefix("api/users/profile")]
     public class AccountController : ApiController
     {
         private const string LocalLoginProvider = "Local";

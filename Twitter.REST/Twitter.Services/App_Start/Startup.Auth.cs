@@ -35,7 +35,7 @@
             OAuthOptions = new OAuthAuthorizationServerOptions
             {
                 //TokenEndpointPath = new PathString("/Token"),
-                TokenEndpointPath = new PathString("/api/Account/login"),
+                TokenEndpointPath = new PathString("/api/users/profile/login"),
                 Provider = new ApplicationOAuthProvider(PublicClientId),
                 AuthorizeEndpointPath = new PathString("/api/Account/ExternalLogin"),
                 AccessTokenExpireTimeSpan = TimeSpan.FromDays(14),
