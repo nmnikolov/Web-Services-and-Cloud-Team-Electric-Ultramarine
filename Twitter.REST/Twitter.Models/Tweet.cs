@@ -8,18 +8,17 @@ namespace Twitter.Models
     public class Tweet
     {
         private ICollection<Reply> replies;
-        private ICollection<TweetFavorite> favorites;
+        private ICollection<ApplicationUser> favorites;
 
         public Tweet()
         {
             this.replies = new HashSet<Reply>();
-            this.favorites = new HashSet<TweetFavorite>();
+            this.favorites = new HashSet<ApplicationUser>();
         }
 
         public int Id { get; set; }
 
         [Required]
-        [MinLength(5)]
         public string Content { get; set; }
 
         public DateTime PostedOn { get; set; }
@@ -37,11 +36,11 @@ namespace Twitter.Models
             get { return this.replies; }
             set { this.replies = value; }
         }
-        public virtual ICollection<TweetFavorite> Favorites
+
+        public virtual ICollection<ApplicationUser> Favorites
         {
             get { return this.favorites; }
             set { this.favorites = value; }
         }
-
     }
 }

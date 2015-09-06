@@ -8,7 +8,6 @@ namespace Twitter.Models
         public int Id { get; set; }
 
         [Required]
-        [MinLength(5)]
         public string Content { get; set; }
 
         public DateTime PostedOn { get; set; }

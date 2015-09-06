@@ -13,7 +13,7 @@
         private ICollection<Tweet> wallTweets;
         private ICollection<ApplicationUser> followers;
         private ICollection<ApplicationUser> followedFriends;
-        private ICollection<TweetFavorite> favoritesTweets;
+        private ICollection<Tweet> favoritesTweets;
 
         public ApplicationUser()
         {
@@ -21,7 +21,7 @@
             this.wallTweets = new HashSet<Tweet>();
             this.followers = new HashSet<ApplicationUser>();
             this.followedFriends = new HashSet<ApplicationUser>();
-            this.favoritesTweets = new HashSet<TweetFavorite>();
+            this.favoritesTweets = new HashSet<Tweet>();
         }
 
         public string Fullname { get; set; }
@@ -40,7 +40,7 @@
             set { this.ownTweets = value; }
         }
 
-        public virtual ICollection<TweetFavorite> FavoritesTweets
+        public virtual ICollection<Tweet> FavoritesTweets
         {
             get { return this.favoritesTweets; }
             set { this.favoritesTweets = value; }

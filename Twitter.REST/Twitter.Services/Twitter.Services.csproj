@@ -254,7 +254,10 @@
     <Compile Include="Models\Tweets\TweetViewModel.cs" />
     <Compile Include="Models\Replies\ReplyToTweetBindingModel.cs" />
     <Compile Include="Models\Replies\ReplyViewModel.cs" />
+    <Compile Include="Models\Users\FollowedUsersBindingModel.cs" />
     <Compile Include="Models\Users\ProfileDataPreviewViewModel.cs" />
+    <Compile Include="Models\Users\FollowingUsersBindingModel.cs" />
+    <Compile Include="Models\Users\UserTweetsBindingModel.cs" />
     <Compile Include="Models\Users\WallBindingModel.cs" />
     <Compile Include="Models\Users\NewsFeedBindingModel.cs" />
     <Compile Include="Models\Users\ProfileDataViewModel.cs" />

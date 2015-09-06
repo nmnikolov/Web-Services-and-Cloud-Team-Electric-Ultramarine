@@ -1,10 +1,7 @@
 ﻿namespace Twitter.Services.Controllers
 {
-    using System.Data.Entity;
     using System.Linq;
     using System.Web.Http;
-    using System.Web.Http.Description;
-    using System.Web.Http.OData;
     using Microsoft.AspNet.Identity;
     using Models.Tweets;
     using Models.Users;
@@ -12,11 +9,18 @@
     [Authorize]
     public class UsersController : BaseApiController
     {
+        [HttpGet]
         [Route("api/users/{username}/wall")]
-        [EnableQuery]
-        [AllowAnonymous]
-        public IHttpActionResult GetUserTweets(string username, [FromUri] WallBindingModel model)
+        public IHttpActionResult GetUserWallTweets(string username, [FromUri] WallBindingModel model)
         {
+            var loggedUserId = this.User.Identity.GetUserId();
+            var loggedUser = this.TwitterData.Users.Find(loggedUserId);
+
+            if (loggedUser == null)
+            {
+                return this.BadRequest("Invalid session token.");
+            }
+
             if (model == null)
             {
                 return this.BadRequest();
@@ -50,45 +54,271 @@
 
             var pagePosts = candidatePosts
                 .Take(model.PageSize)
-                .Select(TweetViewModel.Create);
+                .Select(t => TweetViewModel.CreateView(t, loggedUser));
 
             return this.Ok(pagePosts);
         }
 
-        [Route("api/users/{username}")]
-        [EnableQuery]
-        [AllowAnonymous]
-        public IHttpActionResult GetUserFullInfo(string username)
+        [HttpGet]
+        [Route("api/users/{username}/tweets")]
+        public IHttpActionResult GetUserTweets(string username, [FromUri] UserTweetsBindingModel model)
         {
-            var wallOwner = this.TwitterData.Users.All()
-                .Where(u => u.UserName == username)
-                .Select(ProfileDataViewModel.Create)
-                .FirstOrDefault();
+            var loggedUserId = this.User.Identity.GetUserId();
+            var loggedUser = this.TwitterData.Users.Find(loggedUserId);
 
-            if (wallOwner == null)
+            if (loggedUser == null)
+            {
+                return this.BadRequest("Invalid session token.");
+            }
+
+            if (model == null)
+            {
+                return this.BadRequest();
+            }
+
+            if (!this.ModelState.IsValid)
+            {
+                return this.BadRequest(this.ModelState);
+            }
+
+            var targetUser = this.TwitterData.Users.All()
+                .FirstOrDefault(u => u.UserName == username);
+
+            if (targetUser == null)
             {
                 return this.NotFound();
             }
 
-            return this.Ok(wallOwner);
+            var candidateTweets = targetUser.OwnTweets
+                .OrderByDescending(p => p.PostedOn)
+                .AsQueryable();
+
+            if (model.StartPostId.HasValue)
+            {
+                candidateTweets = candidateTweets
+                    .AsQueryable()
+                    .SkipWhile(p => p.Id != model.StartPostId)
+                    .Skip(1)
+                    .AsQueryable();
+            }
+
+            var userTweets = candidateTweets
+                .Take(model.PageSize)
+                .Select(t => TweetViewModel.CreateView(t, loggedUser));
+
+            return this.Ok(userTweets);
         }
 
-        [Route("api/users/{username}/preview")]
-        [EnableQuery]
-        [AllowAnonymous]
-        public IHttpActionResult GetUserPreviewInfo(string username)
+        [HttpGet]
+        [Route("api/users/{username}/favorite")]
+        public IHttpActionResult GetUserFavoriteTweets(string username, [FromUri] UserTweetsBindingModel model)
         {
-            var wallOwner = this.TwitterData.Users.All()
-                .Where(u => u.UserName == username)
-                .Select(ProfileDataPreviewViewModel.Create)
-                .FirstOrDefault();
+            var loggedUserId = this.User.Identity.GetUserId();
+            var loggedUser = this.TwitterData.Users.Find(loggedUserId);
 
-            if (wallOwner == null)
+            if (loggedUser == null)
+            {
+                return this.BadRequest("Invalid session token.");
+            }
+
+            if (model == null)
+            {
+                return this.BadRequest();
+            }
+
+            if (!this.ModelState.IsValid)
+            {
+                return this.BadRequest(this.ModelState);
+            }
+
+            var targetUser = this.TwitterData.Users.All()
+                .FirstOrDefault(u => u.UserName == username);
+
+            if (targetUser == null)
             {
                 return this.NotFound();
             }
 
-            return this.Ok(wallOwner);
+            var candidateTweets = targetUser.FavoritesTweets
+                .OrderByDescending(p => p.PostedOn)
+                .AsQueryable();
+
+            if (model.StartPostId.HasValue)
+            {
+                candidateTweets = candidateTweets
+                    .AsQueryable()
+                    .SkipWhile(p => p.Id != model.StartPostId)
+                    .Skip(1)
+                    .AsQueryable();
+            }
+
+            var userTweets = candidateTweets
+                .Take(model.PageSize)
+                .Select(t => TweetViewModel.CreateView(t, loggedUser));
+
+            return this.Ok(userTweets);
+        }
+
+        [HttpGet]
+        [Route("api/users/{username}/following")]
+        public IHttpActionResult GetFollowingUsers(string username, [FromUri] FollowingUsersBindingModel model)
+        {
+            var loggedUserId = this.User.Identity.GetUserId();
+            var loggedUser = this.TwitterData.Users.Find(loggedUserId);
+
+            if (loggedUser == null)
+            {
+                return this.BadRequest("Invalid session token.");
+            }
+
+            if (model == null)
+            {
+                return this.BadRequest();
+            }
+
+            if (!this.ModelState.IsValid)
+            {
+                return this.BadRequest(this.ModelState);
+            }
+
+            var targetUser = this.TwitterData.Users.All()
+                .FirstOrDefault(u => u.UserName == username);
+
+            if (targetUser == null)
+            {
+                return this.NotFound();
+            }
+
+            var candidateUsers = targetUser.FollowedFriends
+                .OrderBy(u => u.Fullname)
+                .AsQueryable();
+
+            if (model.StartUserId != null)
+            {
+                candidateUsers = candidateUsers
+                    .AsQueryable()
+                    .SkipWhile(p => p.Id != model.StartUserId)
+                    .Skip(1)
+                    .AsQueryable();
+            }
+
+            var users = candidateUsers
+                .Take(model.PageSize)
+                .Select(u => ProfileDataPreviewViewModel.Create(u, loggedUser));
+
+            return this.Ok(new
+            {
+                totalUsers = targetUser.FollowedFriends.Count,
+                users
+            });
+        }
+
+        [HttpGet]
+        [Route("api/users/{username}/followed")]
+        public IHttpActionResult GetFollowedUsers(string username, [FromUri] FollowedUsersBindingModel model)
+        {
+            var loggedUserId = this.User.Identity.GetUserId();
+            var loggedUser = this.TwitterData.Users.Find(loggedUserId);
+
+            if (loggedUser == null)
+            {
+                return this.BadRequest("Invalid session token.");
+            }
+
+            if (model == null)
+            {
+                return this.BadRequest();
+            }
+
+            if (!this.ModelState.IsValid)
+            {
+                return this.BadRequest(this.ModelState);
+            }
+
+            var targetUser = this.TwitterData.Users.All()
+                .FirstOrDefault(u => u.UserName == username);
+
+            if (targetUser == null)
+            {
+                return this.NotFound();
+            }
+
+            var candidateUsers = targetUser.Followers
+                .OrderBy(u => u.Fullname)
+                .AsQueryable();
+
+            if (model.StartUserId != null)
+            {
+                candidateUsers = candidateUsers
+                    .AsQueryable()
+                    .SkipWhile(p => p.Id != model.StartUserId)
+                    .Skip(1)
+                    .AsQueryable();
+            }
+
+            var users = candidateUsers
+                .Take(model.PageSize)
+                .Select(u => ProfileDataPreviewViewModel.Create(u, loggedUser));
+
+            return this.Ok(new
+            {
+                totalUsers = targetUser.Followers.Count,
+                users
+            });
+        }
+
+        [HttpGet]
+        [Route("api/users/{username}")]
+        public IHttpActionResult GetUserFullInfo(string username)
+        {
+            var loggedUserId = this.User.Identity.GetUserId();
+            var loggedUser = this.TwitterData.Users.Find(loggedUserId);
+
+            if (loggedUser == null)
+            {
+                return this.BadRequest("Invalid session token.");
+            }
+
+//            var wallOwner = this.TwitterData.Users.All()
+//                .Where(u => u.UserName == username)
+//                .Select(ProfileDataViewModel.Create)
+//                .FirstOrDefault();
+
+            var targetUser = this.TwitterData.Users.All()
+                .FirstOrDefault(u => u.UserName == username);
+
+            if (targetUser == null)
+            {
+                return this.NotFound();
+            }
+
+            var targetUserInfo = ProfileDataViewModel.Create(targetUser, loggedUser);
+
+            return this.Ok(targetUserInfo);
+        }
+
+        [HttpGet]
+        [Route("api/users/{username}/preview")]
+        public IHttpActionResult GetUserPreviewInfo(string username)
+        {
+            var loggedUserId = this.User.Identity.GetUserId();
+            var loggedUser = this.TwitterData.Users.Find(loggedUserId);
+            if (loggedUser == null)
+            {
+                return this.BadRequest("Invalid session token.");
+            }
+
+            var targetUser = this.TwitterData.Users.All()
+               .FirstOrDefault(u => u.UserName == username);
+
+            if (targetUser == null)
+            {
+                return this.NotFound();
+            }
+
+            var targetUserInfo = ProfileDataPreviewViewModel.Create(targetUser, loggedUser);
+
+            return this.Ok(targetUserInfo);
         }
 
         //[Authorize]

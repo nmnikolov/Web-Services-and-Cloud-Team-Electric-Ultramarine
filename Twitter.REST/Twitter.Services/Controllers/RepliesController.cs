@@ -6,7 +6,6 @@
     using Microsoft.AspNet.Identity;
     using Twitter.Models;
     using Models.Replies;
-    using Models.Users;
 
     [Authorize]
     public class RepliesController : BaseApiController
@@ -25,6 +24,7 @@
             }
 
             var replies = tweet.Replies.AsQueryable()
+                .OrderByDescending(r => r.PostedOn)
                 .Select(ReplyViewModel.Create);
 
             return this.Ok(replies);

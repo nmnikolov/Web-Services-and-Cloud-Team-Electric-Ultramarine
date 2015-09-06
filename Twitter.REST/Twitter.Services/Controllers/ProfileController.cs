@@ -70,14 +70,7 @@
                 return this.BadRequest("Invalid session token.");
             }
 
-            var profileDataView = new ProfileDataViewModel
-            {
-                Fullname = loggedUser.Fullname,
-                Email = loggedUser.Email,
-                Gender = loggedUser.Gender,
-                ProfileImageData = loggedUser.ProfileImageData,
-                CoverImageData = loggedUser.CoverImageData
-            };
+            var profileDataView = ProfileDataViewModel.Create(loggedUser, loggedUser);
 
             return this.Ok(profileDataView);
         }

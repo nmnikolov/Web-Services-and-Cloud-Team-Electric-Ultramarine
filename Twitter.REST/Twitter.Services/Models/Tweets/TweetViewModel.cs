@@ -26,6 +26,8 @@
 
         public int FavoritesCount { get; set; }
 
+        public bool IsFavorited { get; set; }
+
         public IEnumerable<ReplyViewModel> Replies { get; set; }
 
         public static Expression<Func<Tweet, TweetViewModel>> Create
@@ -70,7 +72,7 @@
             }
         }
 
-        public static TweetViewModel CreateView(Tweet t)
+        public static TweetViewModel CreateView(Tweet t, ApplicationUser loggedUser)
         {
             return new TweetViewModel
             {
@@ -91,6 +93,7 @@
                 PostedOn = t.PostedOn,
                 RepliesCount = t.Replies.Count,
                 FavoritesCount = t.Favorites.Count,
+                IsFavorited = t.Favorites.Any(),
                 Replies = t.Replies
                     .OrderByDescending(r => r.PostedOn)
                     .Take(3)
