@@ -53,7 +53,7 @@
             var homeTweets = candidateTweets
                 .Take(model.PageSize)
                 .AsQueryable()
-                .Select(TweetViewModel.Create)
+                .Select(t => TweetViewModel.CreateView(t, loggedUser))
                 .ToList();
 
             return this.Ok(homeTweets);
