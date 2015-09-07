@@ -450,14 +450,14 @@
             }
 
             var usersSearchResult = this.TwitterData.Users.All()
-                .Where(u => u.UserName.Contains(model.Search) || u.Fullname.Contains(model.Search))
-                .OrderBy(u => u.UserName)
+                .Where(u => u.Fullname.Contains(model.Search))
+                .OrderBy(u => u.Fullname)
+                .Take(5)
                 .Select(u => new
                 {
                     u.UserName,
                     u.Fullname,
                     u.ProfileImageData
-                    //u.Location
                 });
 
             return this.Ok(usersSearchResult);
