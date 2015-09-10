@@ -1,0 +1,13 @@
+<div ng-if="previewData" ng-cloak class="media" profile-controller-directive>
+    <div class="media-left">
+        <img ng-src="{{previewData.image}}" alt="profile picture" style="width: 150px; height: 150px"/>
+    </div>
+    <div class="media-body">
+        <a ng-click="hidePopover()" href="#/user/{{previewData.username}}/wall/">
+            <h4>{{previewData.fullname}}</h4>
+        </a>
+        <button ng-if="previewData.isFollowing === false && previewData.username !== username" type="submit" class="btn btn-lg btn-success" ng-click="sendFollowRequest(previewData)">Follow</button>
+        <button ng-if="previewData.isFollowing === true && previewData.username !== username" type="submit" class="btn btn-lg btn-danger" ng-click="sendUnfollowRequest(previewData)">Unfollow</button>
+    </div>
+    <span  ng-click="hideUserPreview();hidePopover();" class="preview-close glyphicon glyphicon-remove"></span>
+</div>

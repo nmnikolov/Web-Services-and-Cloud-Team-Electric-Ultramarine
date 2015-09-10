@@ -1,0 +1,60 @@
+<div ng-repeat="post in posts" post-controller-directive class="post">
+    <div class="well .alert-success col-xs-12 col-md-12" comment-controller-directive ng-init="toLocalTimeZone(post)">
+        <div class="form-group col-xs-12 col-md-12">
+            <div class="media-left">
+                <img ng-src="{{post.author.profileImageData}}" err-src="{{defaultImage}}" alt="profile picture" style="width: 50px; height: 50px"/>
+            </div>
+            <div class="media-body">
+                <span class="author" popup-show="templates/user-preview-box.html" ng-click="showUserPreview(post.author.username, $event, 'post')">
+                    {{post.author.fullname}}
+                </span>
+                <!--<span ng-if="post.author.username !== post.wallOwner.username && isNewsFeed">-->
+                <span ng-if="post.author.username !== post.wallOwner.username">
+                    <span class="fa fa-angle-double-right"></span>
+                    <span class="author" popup-show="templates/user-preview-box.html" ng-click="showUserPreview(post.wallOwner.username, $event, 'post')">
+                        {{post.wallOwner.fullname}}
+                    </span>
+                </span>
+                <div>{{post.postedOn | date: "dd MMM yyyy HH:mm:ss"}}</div>
+            </div>
+            <div ng-if="post.author.username === username || isOwnWall" class="btn-group drop-down post-caret" role="group">
+                <span type="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <span class="fa fa-chevron-down drop-down-post-caret"></span>
+                </span>
+                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                    <li ng-if="post.author.username === username" ng-click="post.editing = true; post.newPostContent = post.content"><a>edit</a></li>
+                    <li ng-if="post.author.username === username || isOwnWall"><a ng-click="deletePost(post)">delete</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="form-group col-xs-12 col-md-12">
+            <span ng-if="!post.editing">{{post.content}}</span>
+            <form ng-show="post.editing" name="editPostForm" ng-submit="editPost(post); post.editing = false">
+                <input type="text" ng-model="post.newPostContent" ng-minlength="1" required class="form-group col-xs-12"/>
+                <button class="btn btn-success" type="submit" ng-disabled="editPostForm.$invalid">Save</button>
+                <a class="btn btn-default" ng-click="post.editing = false">Cancel</a>
+            </form>
+        </div>
+
+        <div class="form-group col-xs-12 col-md-12" >
+            <!--<span ng-if="isOwnWall || isOwnFeed || post.author.isFriend || post.wallOwner.isFriend">-->
+                <!--<span  class="like-button">favorite</span>-->
+                <!--<span ng-if="post.isFavorited" ng-click="unlikePost(post);" class="unlike-button">unfavorite</span>-->
+            <!--</span>-->
+
+            <span ng-if="post.author.username == username" class="glyphicon glyphicon-star-empty favorites-icon" title="favorites"></span>
+            <span ng-if="post.isFavorited == false && post.author.username != username" ng-click="favoritePost(post);" class="glyphicon glyphicon-star-empty like-button" title="favorites"></span>
+            <span ng-if="post.isFavorited == true  && post.author.username != username" ng-click="unfavoritePost(post);" class="glyphicon glyphicon-star unlike-button" title="favorites"></span>
+            <span class="views post-details" title="favorites">{{post.favoritesCount}}</span>
+            <span class="fa fa-comments" title="replies"></span> <span class="comments-count post-details" title="replies">{{post.repliesCount}}</span>
+            <span ng-init="post.expandComment=false">
+                <span ng-click="post.expandComment = !post.expandComment" class="comment-toggle">reply</span>
+                <div ng-include="'templates/comment-box.html'"></div>
+            </span>
+        </div>
+
+        <li ng-if="post.repliesCount > 0" class="comments media-object col-xs-12" ng-include="'templates/comments.html'"></li>
+
+    </div>
+</div>

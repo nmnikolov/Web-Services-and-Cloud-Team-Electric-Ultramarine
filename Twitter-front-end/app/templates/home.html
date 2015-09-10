@@ -1,0 +1,27 @@
+<header ng-if="isLogged()" header-directive></header>
+
+<main class="row" user-controller-directive>
+    <div class="col-md-12 white welcome" ng-if="!isLogged()">
+            <div class="center">
+                <h1>Welcome to Twitter. Please </h1>
+                <div class="">
+                    <a href="#/login/"><button type="button" class="btn btn-lg btn-success">Login</button></a>
+                    <span>or</span>
+                    <a href="#/register/"><button type="button" class="btn btn-lg btn-danger">Register</button></a>
+                </div>
+            </div>
+
+    </div>
+
+    <div ng-if="isLogged()" profile-controller-directive>
+        <legend>
+            <h2>News feed</h2>
+        </legend>
+        <div class="form-group col-md-9">
+            <div  ng-include="'templates/posts.html'"  infinite-scroll='loadNewsFeed()' infinite-scroll-disabled='wallBusy' infinite-scroll-distance="0" class="row">
+            </div>
+        </div>
+        <!--<div class="media col-md-3" ng-init="getOwnFriendsListPreview()" ng-include="'templates/friends-preview.html'">-->
+        <!--</div>-->
+    </div>
+</main>

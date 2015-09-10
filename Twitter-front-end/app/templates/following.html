@@ -1,0 +1,38 @@
+<header ng-if="isLogged()" header-directive></header>
+
+<main user-controller-directive>
+    <div class="white" profile-controller-directive ng-init="getWallOwner()">
+        <!--<div ng-init="getFollowingUsers()">-->
+        <div infinite-scroll='getFollowingUsers()' infinite-scroll-disabled='wallBusy' infinite-scroll-distance="0">
+            <div class="wall-header col-xs-12" ng-style="{'background-image':'url(' + (wallOwner.coverImageData ? wallOwner.coverImageData : 'images/default_cover.jpg') +')'}" ng-include="'templates/user-header.html'">
+            </div>
+            <legend><h2>{{wallOwner.fullname}} following users ({{totalUsers}} total)</h2></legend>
+
+            <div class="form-group col-sm-11">
+                <label for="input1" class="col-sm-2 control-label">Search by name</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" id="input1" placeholder="friend name" ng-model="filterFriends.fullname">
+                </div>
+            </div>
+
+            <div class="pending-requests" data-example-id="thumbnails-with-custom-content">
+                <div class="row" >
+                    <div class="col-sm-5 col-md-3" ng-repeat="friend in friendsList | filter: filterFriends">
+                        <div class="thumbnail">
+                            <img ng-src="{{friend.profileImageData}}" err-src="{{defaultImage}}" alt="profile picture" style="width: 100px; height: 100px"/>
+                            <div class="caption">
+                                <h3 id="thumbnail-label">
+                                    <a href="#/user/{{friend.username}}/wall/"><span>{{friend.fullname}}</span></a>
+                                </h3>
+                            </div>
+                            <div>
+                                <button ng-if="friend.isFollowing === false && friend.username !== username" type="submit" class="btn btn-lg btn-success" ng-click="sendFollowRequest(friend)">Follow</button>
+                                <button ng-if="friend.isFollowing === true && friend.username !== username" type="submit" class="btn btn-lg btn-danger" ng-click="sendUnfollowRequest(friend)">Unfollow</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

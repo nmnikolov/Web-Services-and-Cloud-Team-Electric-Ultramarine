@@ -1,0 +1,35 @@
+<li class="media comment col-xs-12" ng-repeat="comment in post.replies">
+    <div class="media-left">
+        <img class="media-object" ng-src="{{comment.author.profileImageData}}"  err-src="{{defaultImage}}" alt="..." style="width: 50px; height: 50px">
+    </div>
+    <div class="media-body">
+        <span class="author" popup-show="templates/user-preview-box.html" ng-click="showUserPreview(comment.author.username, $event, 'comment')"> {{comment.author.fullname}}</span>
+        <div ng-init="toLocalTimeZone(comment)">{{comment.postedOn | date: "dd MMM yyyy HH:mm:ss"}}</div>
+    </div>
+
+    <div class="comment-content col-xs-12 col-md-12">
+        <span ng-if="!comment.editing">{{comment.content}}</span>
+        <form ng-show="comment.editing" name="editCommentForm" ng-submit="editComment(post, comment); comment.editing = false">
+            <input type="text" ng-model="comment.newCommentContent" ng-minlength="1" required class="form-group col-xs-12"/>
+            <button class="btn btn-success" type="submit" ng-disabled="editCommentForm.$invalid">Save</button>
+            <a class="btn btn-default" ng-click="comment.editing = false">Cancel</a>
+        </form>
+    </div>
+    <!--<div class="col-xs-12 col-md-12 comment-details">-->
+        <!--<span ng-if="isOwnWall || isOwnFeed || post.author.isFriend || post.wallOwner.isFriend">-->
+            <!--<span ng-if="!comment.liked" ng-click="likeComment(post, comment);" class="like-button">Like</span>-->
+            <!--<span ng-if="comment.liked" ng-click="unlikeComment(post, comment);" class="unlike-button">Unlike</span>-->
+        <!--</span>-->
+        <!--<span class="glyphicon glyphicon-thumbs-up" title="likes"></span> <span class="views post-details" title="likes">{{comment.likesCount}}</span>-->
+    <!--</div>-->
+    <div ng-if="post.author.username === username || comment.author.username === username" class="btn-group drop-down comment-caret" role="group">
+        <span type="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            <span class="fa fa-chevron-down drop-down-comment-caret"></span>
+        </span>
+        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+            <li ng-if="comment.author.username === username" ng-click="comment.editing = true; comment.newCommentContent = comment.content"><a>edit</a></li>
+            <li ng-if="post.author.username === username || comment.author.username === username"><a ng-click="deleteComment(post, comment)">delete</a></li>
+        </ul>
+    </div>
+</li>
+<li class="pointer" ng-if="post.replies.length < post.repliesCount" ng-click="getPostComments(post)">view all</li>

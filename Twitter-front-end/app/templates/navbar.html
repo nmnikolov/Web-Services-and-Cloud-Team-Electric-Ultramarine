@@ -1,0 +1,75 @@
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-9" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <span class="navbar-brand header-logo">Twitter</span>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-9" aria-expanded="false">
+
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="#/"><span class="glyphicon glyphicon-globe"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#/user/{{username}}/wall/"><span class="glyphicon glyphicon-home"></span></a>
+                </li>
+                <!--<li ng-mouseenter="showPendingRequest=true" ng-mouseleave="showPendingRequest=false">-->
+                    <!--<a href="#/friends/requests/" class="glyphicon glyphicon-user"><span ng-if="pendingRequests.length > 0" class="badge"> {{pendingRequests.length}}</span>-->
+                    <!--</a>-->
+                    <!--<ul id="friend-requests-box" ng-if="showPendingRequest && pendingRequests.length > 0">-->
+                        <!--<li ng-repeat="request in pendingRequests" class="list-group-item">-->
+                            <!--<a href="#/user/{{request.user.username}}/wall/" class="media-left">-->
+                                <!--<img ng-src="{{request.user.profileImageData}}" err-src="{{defaultImage}}" alt="profile picture" style="width: 50px; height: 50px"/>-->
+                            <!--</a>-->
+                            <!--<div class="media-body">-->
+                                <!--<div class="media-body">-->
+                                    <!--<a class="name" href="#/user/{{request.user.username}}/wall/" style="color:black">{{request.user.name}}</a>-->
+                                <!--</div>-->
+                                <!--<div class="media-right action">-->
+                                    <!--<span ng-click="acceptFriendRequest(request)" class="media-left btn btn-success btn-sm">accept</span>-->
+                                <!--</div>-->
+                                <!--<div class="media-right action">-->
+                                    <!--<span ng-click="rejectFriendRequest(request)" class="media-right btn btn-default btn-sm">reject</span>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                <!--</li>-->
+            </ul>
+
+            <form class="navbar-form navbar-right" id="search-form" role="search">
+                <div class="input-group">
+                    <input type="text" id="search-input" ng-model="searchTerm" ng-change="searchUser();" ng-blur="clearSearchResults()" class="form-control" placeholder="Search user by name...">
+                </div><!-- /input-group -->
+
+                <div id="search-results" ng-if="searchResults" class="list-group">
+                    <div ng-repeat="user in searchResults" class="list-group-item">
+                        <a href="#/user/{{user.userName}}/wall/">
+                            <img ng-src="{{user.profileImageData}}" err-src="{{defaultImage}}" alt="profile picture" style="width: 50px; height: 50px"/>
+                            <span class="name">{{user.fullname}}</span>
+                        </a>
+                    </div>
+                </div>
+            </form>
+
+            <ul class="nav navbar-nav navbar-right">
+                <!--<li><a href="#/user/{{username}}/friends/"><i class="fa fa-users"></i></a></li>-->
+                <li><a href="#/settings/edit/details/"><span class="glyphicon glyphicon-pencil"></span></a></li>
+                <li><a href="#/settings/edit/password/"><span class="glyphicon glyphicon-lock"></span></a></li>
+                <li><a ng-click="logout()" ng-if="isLogged" href="#/"><span class="glyphicon glyphicon-log-out"></span></a></li>
+            </ul>
+
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>

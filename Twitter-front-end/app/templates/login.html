@@ -1,0 +1,26 @@
+<main user-controller-directive="">
+    <form class="login form-horizontal center white col-lg-6 col-lg-offset-3" id="loginForm" name="loginForm" ng-submit="login()">
+        <fieldset>
+            <legend class="left"><h1>Login</h1></legend>
+            <div class="form-info">
+                <div class="form-group">
+                    <div class="input-group input-group-lg col-md-8 col-md-offset-2 login-field">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input ng-model="loginData.username" id="login-username" type="text" class="form-control" name="username" value="" placeholder="username..." required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group input-group-lg col-md-8 col-md-offset-2 login-field">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                        <input ng-model="loginData.password" id="login-password" type="password" ng-minlength="6" ng-maxlength="100" class="form-control" name="password" placeholder="password..." required>
+                    </div>
+                </div>
+            </div>
+            <div class="center col-xs-12">
+                <button id="login-btn" type="submit" class="btn btn-lg btn-success" ng-disabled="loginForm.$invalid">Login</button>
+                <span>or</span>
+                <a href="#/register/">Register</a>
+            </div>
+        </fieldset>
+    </form>
+</main>

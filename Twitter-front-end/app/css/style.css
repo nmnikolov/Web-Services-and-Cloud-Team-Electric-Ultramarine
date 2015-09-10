@@ -1,0 +1,401 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    overflow-y: scroll;
+}
+
+body {
+    max-width: 100%;
+    font-size: 16px;
+    background: #E9EAED;
+}
+
+/*--- Header ---*/
+
+header {
+    background: #222222;
+    margin-bottom: 60px;
+}
+
+header .navbar {
+    margin: 0 auto 20px;
+    border: none;
+    background: #222222;
+}
+
+header .navbar-nav li {
+    margin: 0 2px;
+}
+
+header .navbar .container-fluid {
+    max-width: 1170px;
+}
+
+header .navbar-inverse .navbar-nav>.active>a {
+    background: #E90606;
+}
+
+body .navbar-inverse .navbar-nav>li>a:hover, body .navbar-inverse .navbar-nav>.active>a:hover {
+    background: #E90606;
+}
+
+header .navbar-inverse a {
+    color: #ffffff !important;
+    font-size: 1.4em;
+    height: 53px;
+}
+
+main{
+    max-width: 1170px !important;
+    margin: 0 auto !important;
+}
+
+h2 {
+    font-size: 1.4em;
+}
+
+/*.glyphicon-ok {*/
+    /*color: green;*/
+    /*vertical-align: top;*/
+    /*top: 5px;*/
+    /*font-size: 1.3em;*/
+/*}*/
+
+/*.glyphicon-remove {*/
+    /*color: red;*/
+    /*vertical-align: top;*/
+    /*top: 5px;*/
+    /*font-size: 1.3em;*/
+/*}*/
+
+#passwordChangeForm .ng-dirty.ng-valid, #loginForm .ng-dirty.ng-valid, #registerForm .ng-dirty.ng-valid {
+    border:1px solid #008000;
+}
+#passwordChangeForm .ng-dirty.ng-invalid, #loginForm .ng-dirty.ng-invalid, #registerForm .ng-dirty.ng-invalid {
+    border:1px solid #a94442;
+}
+
+.comments {
+    padding-left: 50px;
+}
+
+.comments > li{
+    list-style: none;
+    border-top: 1px solid lightgray;
+    padding: 5px 20px;
+}
+
+.author {
+    cursor: pointer;;
+    color: #038cff;
+}
+
+.favorites-icon {
+    font-size: 1.3em;
+}
+
+.fa-comments {
+    font-size: 1.3em;
+}
+
+.like-button:hover, .unlike-button:hover {
+    opacity: 1;
+}
+
+.like-button {
+    font-size: 1.3em;
+    cursor: pointer;
+    color: #247ab5;
+    opacity: 0.6;
+ }
+
+.comment-toggle:hover {
+    color: #b80000;
+}
+
+.unlike-button {
+    font-size: 1.3em;
+    cursor: pointer;
+    color: #b55e00;
+    opacity: 0.6;
+}
+
+#user-preview-box {
+    position: absolute;
+    display: none;
+    background: #ffffff;
+}
+
+#profile-image, #cover-image {
+    display: none;
+}
+
+#profile-image-preview {
+    margin-bottom: 0;
+}
+
+.file-limit {
+    text-align: center;
+}
+
+.noty_type_error{
+    background: #ff574f;
+    color: white;
+}
+
+.noty_type_success {
+    /*#dff0d8*/
+    background: rgba(121, 216, 121, 0.50);
+    /*#3C763C*/
+    color: #3C763C;
+}
+
+#search-results {
+    position: absolute;
+}
+
+#loading {
+    position: absolute;
+    color: #ff0000;
+}
+
+.error-template {
+    padding: 40px 15px;
+    text-align: center;
+}
+.error-actions {
+    margin-top:15px;
+    margin-bottom:15px;
+}
+.error-actions .btn-primary {
+    margin-right:10px;
+    background: #df691a !important;
+    border: none;
+}
+
+.btn, #search-input, input {
+    border-radius: 0 !important;
+}
+
+#search-results {
+    /*z-index: 1001;*/
+}
+
+#search-results .name {
+    color: #000000;
+}
+
+/*.friends-preview {*/
+    /*position: fixed;*/
+/*}*/
+
+.pull-right {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+
+.pull-right div {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+
+.row {
+    /*width: 100%;*/
+}
+
+.input-group-addon {
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    border-radius: 0 !important;
+}
+
+.welcome {
+    text-align: center;
+    padding: 80px;
+}
+
+.white {
+    background: #ffffff;
+}
+
+.center {
+    text-align: center;
+}
+
+.left {
+    text-align: left;
+}
+
+.welcome, #loginForm, #registerForm {
+    margin-top: 100px;
+}
+
+#loginForm, #registerForm {
+    padding: 15px;
+}
+
+.well {
+    background-image: linear-gradient(to bottom, #FFFFFF 0%, #EFEFEF 100%);
+    border-color: #B0B0B0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+
+.popover {
+    padding: 30px;
+    height: 220px;
+    max-width: 350px;
+    text-align: center;
+}
+
+.popover .media-body {
+    vertical-align: middle;
+}
+
+.media {
+    margin-top: 0;
+}
+
+.preview-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 17px;
+    cursor: pointer;
+    color: lightgray;
+}
+
+.preview-close:hover {
+    color: gray;
+}
+
+.comment-toggle {
+    cursor: pointer;
+}
+
+.wall-header {
+    background-repeat:no-repeat;
+    background-size: 100% 100%;
+    /*height: 180px;*/
+    height: 240px;
+    margin-bottom: 20px;
+}
+
+.wall-header .media-left{
+    padding: 10px;
+    background: #E9EAED;
+    position: relative;
+    top: 18px;
+    left: 18px;
+}
+
+.wall-header h2{
+    font-size: 2em;
+    display: inline-block;
+    color: #000000;
+    position: relative;
+    top: 20px;
+    left: 50px;
+    background: #E9EAED;
+    padding: 5px;
+}
+
+.wall-header .status {
+    display: block;
+    top: 25px;
+    position: relative;
+    left: 50px;
+}
+
+.wall-header .wall-owner-details {
+    font-size: 0.5em;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.pending-requests{
+    text-align: center;
+    padding: 30px;
+}
+
+.post-caret {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 17px;
+    cursor: pointer;
+    color: lightgray;
+}
+
+.drop-down-post-caret {
+    color: #505050;
+}
+
+.dropdown-menu-right {
+    min-width: 0;
+}
+
+.comment-caret {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 17px;
+    cursor: pointer;
+    color: #505050;
+}
+
+.comment {
+    padding: 10px !important;
+}
+
+.comment-content {
+    margin: 5px 0;
+    padding-left: 0;
+}
+
+.comment-details {
+    padding-left: 0;
+}
+
+#friend-requests-box {
+    position: absolute;
+    padding: 0;
+    max-height: 300px;
+    overflow-y: scroll;
+}
+
+#friend-requests-box .action {
+    vertical-align: middle;
+}
+
+#friend-requests-box .media-body {
+    vertical-align: middle !important;
+}
+
+#friend-requests-box .name {
+    color: #000000 !important;
+    font-size: 1em;
+}
+
+.cover-upload {
+    text-align: center;
+    height: 180px;
+}
+
+.cover-upload-section {
+    position: absolute;
+    bottom: 0;
+    left: 50px;
+    background: #ffffff;
+    padding: 5px;
+}
+

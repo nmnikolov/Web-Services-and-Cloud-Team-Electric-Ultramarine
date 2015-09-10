@@ -1,0 +1,17 @@
+<div ng-if="wallOwner" class="media-left">
+    <img ng-src="{{wallOwner.profileImageData}}" err-src="{{defaultImage}}" alt="profile picture" style="width: 125px; height: 125px"/>
+</div>
+<div class="media-body">
+    <h2><a href="#/user/{{wallOwner.username}}/wall/">{{wallOwner.fullname}}</a></h2>
+    <div class="status">
+        <button ng-if="wallOwner.isFollowing === false && wallOwner.username !== username" type="submit" class="btn btn-lg btn-success" ng-click="sendFollowRequest(wallOwner)">Follow</button>
+        <button ng-if="wallOwner.isFollowing === true && wallOwner.username !== username" type="submit" class="btn btn-lg btn-danger" ng-click="sendUnfollowRequest(wallOwner)">Unfollow</button>
+    </div>
+</div>
+
+<div class="wall-owner-details">
+    <h2><a href="#/user/{{wallOwner.username}}/tweets/">Tweets {{wallOwner.tweetsCount}}</a></h2>
+    <h2><a href="#/user/{{wallOwner.username}}/following/">Following {{wallOwner.followingUsersCount}}</a></h2>
+    <h2><a href="#/user/{{wallOwner.username}}/followers/">Followers {{wallOwner.followersCount}}</a></h2>
+    <h2><a href="#/user/{{wallOwner.username}}/favorites/">Favorites {{wallOwner.favoritesCount}}</a></h2>
+</div>

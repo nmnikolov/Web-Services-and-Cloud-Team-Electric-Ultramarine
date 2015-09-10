@@ -1,0 +1,59 @@
+<main user-controller-directive="" class="row">
+    <form class="register form-horizontal col-md-6 col-md-offset-3 white" id="registerForm" name="registerForm" ng-submit="register()">
+        <fieldset>
+            <legend><h1>Register</h1></legend>
+            <div class="col-lg-12 form-info">
+                <div class="form-group">
+                    <label for="reg-username" class="col-lg-4 control-label">Username</label>
+                    <div class="col-lg-7">
+                        <input type="text" ng-model="registerData.username" class="form-control" id="reg-username" placeholder="Username" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="reg-password" class="col-lg-4 control-label">Password</label>
+                    <div class="col-lg-7">
+                        <input type="password" ng-model="registerData.password" class="form-control" id="reg-password" ng-minlength="6" ng-maxlength="100" placeholder="Password" tooltip="Enter password between 6 and 100 symbols"  tooltip-trigger="focus" tooltip-placement="top" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password" class="col-lg-4 control-label">Confirm password</label>
+                    <div class="col-lg-7">
+                        <input type="password" ng-model="registerData.confirmPassword" class="form-control" id="confirm-password" ng-minlength="6" ng-maxlength="100" placeholder="Confirm password" compare-to="registerData.password" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="reg-name" class="col-lg-4 control-label">Name</label>
+                    <div class="col-lg-7">
+                        <input type="text" ng-model="registerData.fullname" class="form-control" id="reg-name" placeholder="Full name" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="reg-email" class="col-lg-4 control-label">Email</label>
+                    <div class="col-lg-7">
+                        <input type="email" ng-model="registerData.email" class="form-control" id="reg-email" placeholder="example@yahoo.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">Gender</label>
+                    <div class="col-lg-7">
+                        <label class="radio-inline" for="male">Male</label>
+                        <input ng-model="registerData.gender" id="male" type="radio" name="gender" value="Male" required>
+
+                        <label class="radio-inline" for="female">Female</label>
+                        <input ng-model="registerData.gender" type="radio" id="female" name="gender" value="Female" required>
+
+                        <label class="radio-inline" for="other">Other</label>
+                        <input ng-model="registerData.gender" type="radio" id="other" name="gender" value="Other" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group center">
+                <button id="login-btn" type="submit" class="btn btn-lg btn-danger" ng-disabled="registerForm.$invalid">Register</button>
+                <span>or</span>
+                <a href="#/login/">Login</a>
+            </div>
+        </fieldset>
+    </form>
+</main>
+

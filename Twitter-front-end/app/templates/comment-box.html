@@ -1,0 +1,4 @@
+<form comment-controller-directive class="slide col-xs-12" ng-if="post.expandComment" name="addCommentFom" ng-submit="addComment(post); post.expandComment = !post.expandComment">
+    <textarea class="form-group col-xs-12" ng-model="commentData.content" placeholder="reply content" required></textarea>
+    <button type="submit" class="form-group btn btn-primary" ng-disabled="addCommentFom.$invalid">add</button>
+</form>
